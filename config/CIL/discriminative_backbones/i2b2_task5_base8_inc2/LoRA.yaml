@@ -1,0 +1,11 @@
+il_mode: CIL
+
+dataset: i2b2_task5_base8_inc2
+classification_type: word-level
+
+backbone_type: discriminative
+
+method: PEFT
+PEFT_type: LoRA
+
+prompt_type: none

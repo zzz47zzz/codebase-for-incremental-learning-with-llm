@@ -1,0 +1,14 @@
+il_mode: TIL
+
+dataset: banking77_task7
+classification_type: sentence-level
+
+backbone_type: generative
+backbone_extract_token: last_token
+
+method: SEQ
+
+lr: 1e-5
+batch_size: 4
+
+prompt_type: auto

@@ -1,0 +1,14 @@
+il_mode: CIL
+
+dataset: tacred_task8
+classification_type: sentence-level
+
+backbone_type: discriminative
+backbone_extract_token: cls_token
+
+method: SEQ
+
+lr: 1e-5
+batch_size: 4
+
+prompt_type: none

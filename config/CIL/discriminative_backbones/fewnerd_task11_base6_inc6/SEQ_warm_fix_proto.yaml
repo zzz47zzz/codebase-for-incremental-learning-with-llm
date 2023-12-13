@@ -1,0 +1,17 @@
+il_mode: CIL
+
+dataset: fewnerd_task11_base6_inc6
+classification_type: word-level
+
+backbone_type: discriminative
+
+method: SEQ
+SEQ_fix_old_classifier: True
+SEQ_fix_encoder: True
+SEQ_warmup_epoch_before_fix_encoder: 3
+SEQ_warmup_target: ce-loss
+SEQ_use_prototype_for_prediction: True
+classifier: CosineLinear # We find that only CosineLinear works empirically. If using Linear, the f1 will be zero.
+training_epochs: 1 # Prototype classifier does not require training
+
+prompt_type: none

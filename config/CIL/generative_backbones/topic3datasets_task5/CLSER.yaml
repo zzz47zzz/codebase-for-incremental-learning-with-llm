@@ -1,0 +1,14 @@
+il_mode: CIL
+
+dataset: topic3datasets_task5
+classification_type: sentence-level
+
+backbone_type: generative
+backbone_extract_token: last_token
+
+method: CLSER
+
+lr: 1e-4
+batch_size: 4
+
+prompt_type: auto

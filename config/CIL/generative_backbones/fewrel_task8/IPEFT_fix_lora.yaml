@@ -1,0 +1,19 @@
+il_mode: CIL
+
+dataset: fewrel_task8
+classification_type: sentence-level
+
+backbone_type: generative
+backbone_extract_token: last_token
+
+method: IPEFT
+IPEFT_type: LoRA
+IPEFT_fix_old_classifier: True
+IPEFT_fix_old_peft: True
+IPEFT_first_peft_then_cls: True
+IPEFT_causallm_epoch: 10
+
+lr: 5e-3
+batch_size: 4
+
+prompt_type: auto

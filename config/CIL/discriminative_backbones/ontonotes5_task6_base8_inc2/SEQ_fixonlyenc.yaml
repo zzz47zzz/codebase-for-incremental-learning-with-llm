@@ -1,0 +1,11 @@
+il_mode: CIL
+
+dataset: ontonotes5_task6_base8_inc2
+classification_type: word-level
+
+backbone_type: discriminative
+
+method: SEQ
+SEQ_fix_encoder: True
+
+prompt_type: none

@@ -1,0 +1,11 @@
+il_mode: CIL
+
+dataset: fewnerd_task11_base6_inc6
+classification_type: word-level
+
+backbone_type: discriminative
+
+method: PEFT
+PEFT_type: LoRA
+
+prompt_type: none

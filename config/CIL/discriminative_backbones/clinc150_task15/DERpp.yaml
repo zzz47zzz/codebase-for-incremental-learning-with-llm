@@ -1,0 +1,14 @@
+il_mode: CIL
+
+dataset: clinc150_task15
+classification_type: sentence-level
+
+backbone_type: discriminative
+backbone_extract_token: cls_token
+
+method: DERpp
+
+lr: 1e-5
+batch_size: 4
+
+prompt_type: none

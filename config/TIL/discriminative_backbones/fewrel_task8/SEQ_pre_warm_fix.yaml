@@ -1,0 +1,19 @@
+il_mode: TIL
+
+dataset: fewrel_task8
+classification_type: sentence-level
+
+backbone_extract_token: cls_token
+backbone_type: discriminative
+
+method: SEQ
+SEQ_fix_old_classifier: True
+SEQ_fix_encoder: True
+SEQ_warmup_epoch_before_fix_encoder: 1
+SEQ_warmup_target: causal-lm
+SEQ_preallocated_classifier: True
+
+lr: 1e-5
+batch_size: 4
+
+prompt_type: none

@@ -1,0 +1,18 @@
+il_mode: CIL
+
+dataset: clinc150_task15
+classification_type: sentence-level
+
+backbone_type: generative
+backbone_extract_token: last_token
+
+method: SEQ
+SEQ_fix_old_classifier: True
+SEQ_fix_encoder: True
+SEQ_warmup_epoch_before_fix_encoder: 1
+SEQ_warmup_target: causal-lm
+
+lr: 1e-5
+batch_size: 4
+
+prompt_type: auto

@@ -1,0 +1,15 @@
+il_mode: CIL
+
+dataset: fewrel_task8
+classification_type: sentence-level
+
+backbone_type: discriminative
+backbone_extract_token: cls_token
+
+method: PEFT
+PEFT_type: LoRA
+
+lr: 1e-5
+batch_size: 4
+
+prompt_type: none

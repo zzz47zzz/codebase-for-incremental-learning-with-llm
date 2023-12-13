@@ -1,0 +1,15 @@
+il_mode: CIL
+
+dataset: topic3datasets_task5
+classification_type: sentence-level
+
+backbone_type: generative
+backbone_extract_token: last_token
+
+method: LAMOL
+LAMOL_use_task_specific_gen_token: False
+
+lr: 1e-5
+batch_size: 4
+
+prompt_type: auto

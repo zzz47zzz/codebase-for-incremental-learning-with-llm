@@ -1,0 +1,14 @@
+il_mode: TIL
+
+dataset: fewrel_task8
+classification_type: sentence-level
+
+backbone_type: generative
+backbone_extract_token: last_token
+
+method: DERpp
+
+lr: 1e-5
+batch_size: 4
+
+prompt_type: auto

@@ -1,0 +1,19 @@
+il_mode: CIL
+
+dataset: banking77_task7
+classification_type: sentence-level
+
+backbone_type: discriminative
+backbone_extract_token: cls_token
+
+method: SEQ
+SEQ_fix_old_classifier: True
+SEQ_fix_encoder: True
+SEQ_warmup_epoch_before_fix_encoder: 3
+SEQ_warmup_target: ce-loss
+SEQ_preallocated_classifier: True
+
+lr: 1e-5
+batch_size: 4
+
+prompt_type: none

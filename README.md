@@ -11,7 +11,7 @@ This is a repository for Incremental Learning with Pretrained Language Models.
 - It supports using [accelerate](https://huggingface.co/docs/accelerate/index) for distributed data parrallel and model parallel.
 - It supports using [wandb](https://wandb.ai/site) for logging.
 
-Please refer to [this repository](https://github.com/zzz47zzz/pretrained-lm-for-incremental-learning-survey) for survey, resource, and paper in this area.
+<!-- Please refer to [this repository](https://github.com/zzz47zzz/pretrained-lm-for-incremental-learning-survey) for survey, resource, and paper in this area. -->
 
 ## Supported List
 
@@ -27,10 +27,12 @@ Please refer to [this repository](https://github.com/zzz47zzz/pretrained-lm-for-
 
 ### Methods
 
+More baselines will be released in the future!
+
 #### General (Text/Intent) Classification
 - [x] SEQ
-- [x] SEQ*
-- [x] [Replay](https://arxiv.org/abs/1902.10486)
+- [x] [SEQ*](https://arxiv.org/abs/2312.07887)
+- [x] [ExperienceReplay](https://arxiv.org/abs/1902.10486)
 - [x] [PEFT (including, LoRA, PromptTuning)](https://huggingface.co/docs/peft/index)
 - [x] [LAMOL (ICLR 2020)](https://openreview.net/forum?id=Skgxcn4YDS)
 - [x] [L2KD (EMNLP 2020)](https://aclanthology.org/2020.emnlp-main.233/)
@@ -165,7 +167,7 @@ Finally, the post-precessed dataset *clinc150_task15*,*fewrel_task8*, and *onton
 The yaml file contains the hyper-parameters for each method.
 For example, the hyper-parameter of SEQ* (w/ and w/o pre-allocating future classifiers) for generative backbones under CIL settings is defined in *config/CIL/generative_backbones/clinc150_task15/SEQ_pre_warm_fix.yaml* and *config/CIL/generative_backbones/clinc150_task15/SEQ_warm_fix.yaml* respectively.
 
-### Step 4: reproduce the results
+#### Step 4: reproduce the results
 
 The scripts for reproducing the probing study are in the folder *reproduce_shell/exp-probing*. 
 
@@ -192,6 +194,27 @@ accelerate launch --config_file {your-accelerate-config-file} main_CL.py --is_wa
 
 Please refer to *utils/config.py* for more general paramters and *models/{model-name}.py* for more model-specific parameters.
 
-## Main Results
+### Main Results
 
 ![main_results](imgs/main_result.jpg)
+
+![main_results](imgs/main_result_2.png)
+
+### Questions and Citation
+If you have questions about this repository, please feel free to contact me at junhaozheng47@outlook.com.
+
+If you find this repository useful, please consider citing our paper.
+```
+@misc{zheng2023learn,
+      title={Learn or Recall? Revisiting Incremental Learning with Pre-trained Language Models}, 
+      author={Junhao Zheng and Shengjie Qiu and Qianli Ma},
+      year={2023},
+      eprint={2312.07887},
+      archivePrefix={arXiv},
+      primaryClass={cs.CL}
+}
+```
+
+### Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=zzz47zzz/pretrained-lm-for-incremental-learning&type=Timeline)](https://star-history.com/#zzz47zzz/pretrained-lm-for-incremental-learning&Timeline)

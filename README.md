@@ -215,6 +215,6 @@ If you find this repository useful, please consider citing our paper.
 }
 ```
 
-### Star History
+<!-- ### Star History
 
-[![Star History Chart](https://api.star-history.com/svg?repos=zzz47zzz/pretrained-lm-for-incremental-learning&type=Timeline)](https://star-history.com/#zzz47zzz/pretrained-lm-for-incremental-learning&Timeline)
+[![Star History Chart](https://api.star-history.com/svg?repos=zzz47zzz/pretrained-lm-for-incremental-learning&type=Timeline)](https://star-history.com/#zzz47zzz/pretrained-lm-for-incremental-learning&Timeline) -->

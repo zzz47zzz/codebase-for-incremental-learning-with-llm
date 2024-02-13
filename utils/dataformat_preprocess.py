@@ -172,7 +172,7 @@ def preprocess_concept_1k(num_task = 10):
     instanceid_2_relationid = []
     instanceid_2_target = []
 
-    with open(os.path.join(src_path,'dataset_2024_1_30_11_40.txt')) as f:
+    with open(os.path.join(src_path,'dataset.txt')) as f:
         cur_triplet = []
         instance = []
         instanceid = 0
@@ -254,9 +254,9 @@ def preprocess_concept_1k(num_task = 10):
     num_concept_base_task = num_concept - num_concept_per_task*(NUM_TASK-1)
 
     # # Save Concepts
-    with open(os.path.join(src_path,'cur_concept.txt'),'w') as f1:
-        for _concept in concept_list:
-            f1.write('%s\n'%(_concept))
+    # with open(os.path.join(src_path,'cur_concept.txt'),'w') as f1:
+    #     for _concept in concept_list:
+    #         f1.write('%s\n'%(_concept))
 
     # Check concepts
     # with open(os.path.join(src_path,'concepts.txt'),'r') as f1:
@@ -333,9 +333,9 @@ def preprocess_concept_1k(num_task = 10):
     #             # '- ' -> '-'
     #             # 'wi fi' -> 'WiFi'
     #             # '  ' -> ' '
-    count_dict = dict(Counter(instanceid_2_relationid))
-    sorted_keys = sorted(count_dict.keys(),key=lambda k:count_dict[k])
-    print([(relation_list[k],count_dict[k]) for k in sorted_keys])
+    # count_dict = dict(Counter(instanceid_2_relationid))
+    # sorted_keys = sorted(count_dict.keys(),key=lambda k:count_dict[k])
+    # print([(relation_list[k],count_dict[k]) for k in sorted_keys])
 
     # Shuffle Order
     concept_order = list(range(num_concept))

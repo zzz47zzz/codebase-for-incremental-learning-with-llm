@@ -16,6 +16,7 @@ This is a repository for Incremental Learning with Pretrained Language Models.
 ## Supported List
 
 ### Scenario
+- [x] Instance-Incremental Learning
 - [x] Class-Incremental Learning
 - [x] Task-Incremental Learning
 
@@ -35,14 +36,16 @@ More baselines will be released in the future!
 - [x] [ExperienceReplay](https://arxiv.org/abs/1902.10486)
 - [x] [PEFT (including, LoRA, PromptTuning)](https://huggingface.co/docs/peft/index)
 - [x] [LAMOL (ICLR 2020)](https://openreview.net/forum?id=Skgxcn4YDS)
+- [x] [LAMOL_KD (arXiv)](https://arxiv.org/abs/2312.07887)
 - [x] [L2KD (EMNLP 2020)](https://aclanthology.org/2020.emnlp-main.233/)
-- [x] [PCLL (EMNLP 2022)](https://aclanthology.org/2022.emnlp-main.766/)
-<!-- - [ ] [ConTinTin (ACL 2022)](https://aclanthology.org/2022.acl-long.218/) -->
-- [x] [ProgPrompt (ICLR 2023)](https://openreview.net/forum?id=UJTgQBc91_)
-<!-- - [ ] [LotteryPrompt (ACL 2023, code not available for now)](https://aclanthology.org/2023.acl-long.16/) -->
-- [x] [LFPT5 (ICLR 2022)](https://openreview.net/forum?id=7mozamSFNt4)
-<!-- - [ ] [AdapComModules (ACL 2022, code is available but hard to implement)](https://aclanthology.org/2022.acl-long.255/) -->
 - [x] [AdapterCL (EMNLP 2021)](https://aclanthology.org/2021.emnlp-main.590/)
+- [x] [PCLL (EMNLP 2022)](https://aclanthology.org/2022.emnlp-main.766/)
+- [x] [LFPT5 (ICLR 2022)](https://openreview.net/forum?id=7mozamSFNt4)
+- [x] [ProgPrompt (ICLR 2023)](https://openreview.net/forum?id=UJTgQBc91_)
+<!-- - [ ] [ConTinTin (ACL 2022)](https://aclanthology.org/2022.acl-long.218/) -->
+<!-- - [ ] [AdapComModules (ACL 2022, code is available but hard to implement)](https://aclanthology.org/2022.acl-long.255/) -->
+<!-- - [ ] [LotteryPrompt (ACL 2023, code not available for now)](https://aclanthology.org/2023.acl-long.16/) -->
+
 
 
 <!-- #### Relation Extraction
@@ -77,6 +80,9 @@ More baselines will be released in the future!
 
 ### Datasets
 
+#### Instance Incremental Learning
+- [x] Concept-1K (The raw and the preprocessed Concept-1K are included in *dataset/concept_1k*, *dataset/concept_1k_task10*, *dataset/concept_1k_task1*).
+
 #### Intent Classification
 - [x] Topic3datasets (agnews, dbpedia, yahoo)
 
@@ -100,28 +106,28 @@ More baselines will be released in the future!
 ### Overview
 ```
 .
-├── main_CL.py                      # This this the python file to be executed for running all experiments
-├── utils                               # This folder contains all basic files for incremental learning 
-│   ├── backbone.py                     # This file loads backbone models from the transformers library
-│   ├── buffer.py                       # This file defines the replay buffer
-│   ├── classifier.py                   # This file loads Linear/CosineLinear classifiers
-│   ├── wrapmodel.py                    # This file wrap the model for using DeepSpeed with accelerate
-│   ├── dataformat_preprocess.py        # This file preprocess the raw datasets to the continual learning dataset
-│   ├── dataloader.py                   # This file prepare the input for languge models
-│   ├── dataset.py                      # This file defines the format for different datasets for continual learning
-│   ├── download_backbones.py           # This file downloads models in advance to avoid network problem.
-│   ├── evaluation.py                   # This file defines the evaluation process for various tasks
-│   ├── factory.py                      # This file loads the various models from the ./models folder
-│   ├── logger.py                       # This file defines the logger
-│   ├── metric.py                       # This file defines the evaluation metric for continual learning
-│   ├── optimizer.py                    # This file defines the optimizer for different models
-│   ├── prompt.py                       # This file defines the prompt used for different tasks
-│   ├── probing.py                      # This file computes the probing performance
-│   └── config.py                       # This file defines general parameters and settings for the experiments
-├── config                          # This folder contains the hyper-parameters for each methods in each datasets
-├── dataset                         # This folder contains datasets for continual learning
-├── models                          # This folder contains models for continual learning
-└── experiments                     # This folder contains log data for each run                 
+├── main_CL.py              # This this the python file to be executed for running all experiments
+├── utils                       # This folder contains all basic files for incremental learning 
+│   ├── backbone.py             # This file loads backbone models from the transformers library
+│   ├── buffer.py               # This file defines the replay buffer
+│   ├── classifier.py           # This file loads Linear/CosineLinear classifiers
+│   ├── wrapmodel.py            # This file wrap the model for using DeepSpeed with accelerate
+│   ├── dataformat_preprocess.py# This file preprocess the raw datasets to the continual learning dataset
+│   ├── dataloader.py           # This file prepare the input for languge models
+│   ├── dataset.py              # This file defines the format for different datasets for continual learning
+│   ├── download_backbones.py   # This file downloads models in advance to avoid network problem.
+│   ├── evaluation.py           # This file defines the evaluation process for various tasks
+│   ├── factory.py              # This file loads the various models from the ./models folder
+│   ├── logger.py               # This file defines the logger
+│   ├── metric.py               # This file defines the evaluation metric for continual learning
+│   ├── optimizer.py            # This file defines the optimizer for different models
+│   ├── prompt.py               # This file defines the prompt used for different tasks
+│   ├── probing.py              # This file computes the probing performance
+│   └── config.py               # This file defines general parameters and settings for the experiments
+├── config                  # This folder contains the hyper-parameters for each methods in each datasets
+├── dataset                 # This folder contains datasets for continual learning
+├── models                  # This folder contains models for continual learning
+└── experiments             # This folder contains log data for each run                 
 ```
 
 ### Quick Start
@@ -137,6 +143,9 @@ Check the *support_dataset_list* in *utils/dataformat_preprocess.py* and select 
 Then, download the raw dataset to the folder *dataset/{dataset-name}*.
 For example, download the clinc150 to the folder *dataset/clinc150*.
 The raw datasets can be downloaded [here](https://drive.google.com/file/d/1mTHRNf6rH6cr4wx_sIO0bpK7hCd3hRQ5/view?usp=drive_link).
+We note that the raw data of Conept-1K is in *dataset/concept_1k*.
+The preprocessed Concept-1K for 10 step incremental learning is in *dataset/concept_1k_task10*.
+The whole Concept-1K is in *dataset/concept_1k_task1*.
 
 Next, exceute the *preprocess_dataset.sh*.
 It will automatically preprocess 8 default datasets for reproducing results ('topic3datasets','clinc150','banking77', 'fewrel','tacred','conll2003','fewnerd','i2b2','ontonotes5') and create new folders in *datasets/{dataset-for-continual-learning-name}* automatically (e.g.,*backing_task7*).
@@ -196,6 +205,10 @@ Please refer to *utils/config.py* for more general paramters and *models/{model-
 
 ### Main Results
 
+The results on IIL scenario.
+![main_results](imgs/IIL_SOTA.jpg)
+
+The results on CIL and TIL scenario.
 ![main_results](imgs/main_result.jpg)
 
 ![main_results](imgs/main_result_2.png)

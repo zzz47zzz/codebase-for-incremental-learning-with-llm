@@ -84,7 +84,7 @@ def get_params():
     # General Settings for Incremental Learning
     # =========================================================================================
     
-    parser.add_argument("--il_mode", default="CIL", choices=["CIL","TIL"], help="the mode of incremental learning ( Class / Task Incremental Learning )")
+    parser.add_argument("--il_mode", default="CIL", choices=["CIL","TIL","IIL"], help="the mode of incremental learning ( Class / Task / Instance Incremental Learning )")
     parser.add_argument("--method", type=str, default='SEQ', choices=METHOD_LIST, help="the selected baseline method to run")
     parser.add_argument("--classifier", type=str, default="None", choices=['None','CosineLinear','Linear'], help="Classifier")
 

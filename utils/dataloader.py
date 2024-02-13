@@ -37,6 +37,7 @@ def get_dataloader_for_sentence_level_dataset_default(params, CL_dataset, tokeni
         with_ans_prompted_input_list = []
         no_ans_prompted_input_list = []
         answer_list = []
+        target_list = []
         for i in range(len(examples[input_column])):
             _input = examples[input_column][i]
             _target = examples[target_column][i]
@@ -51,6 +52,7 @@ def get_dataloader_for_sentence_level_dataset_default(params, CL_dataset, tokeni
                                                          eos_token=eos_token,
                                                          dataset=params.dataset))
             answer_list.append(' {0}{1}'.format(_target,eos_token))
+            target_list.append(_target)
 
         # For training with Causal Language Modeling Loss
         print_max_len_information(tokenizer(with_ans_prompted_input_list)['input_ids'],params.max_seq_length)
@@ -63,6 +65,7 @@ def get_dataloader_for_sentence_level_dataset_default(params, CL_dataset, tokeni
         with_ans_lm_inputs['labels_with_ans'] = deepcopy(with_ans_lm_inputs['input_ids'])
         with_ans_lm_inputs['label_idx_cil'] = deepcopy(examples['label_idx_cil'])
         with_ans_lm_inputs['label_idx_til'] = deepcopy(examples['label_idx_til'])
+        with_ans_lm_inputs['target'] = target_list
         
         answer_lm_inputs = tokenizer(answer_list)
         for i,answer_tokens in enumerate(answer_lm_inputs['input_ids']):
@@ -97,6 +100,13 @@ def get_dataloader_for_sentence_level_dataset_default(params, CL_dataset, tokeni
         with_ans_lm_inputs['attention_mask'] = deepcopy(no_ans_lm_inputs['attention_mask'])
         del no_ans_lm_inputs
 
+        if 'instance_id' in examples.keys():
+            with_ans_lm_inputs['instance_id'] = deepcopy(examples['instance_id'])
+        if 'concept_id' in examples.keys():
+            with_ans_lm_inputs['concept_id'] = deepcopy(examples['concept_id'])
+        if 'relation_id' in examples.keys():
+            with_ans_lm_inputs['relation_id'] = deepcopy(examples['relation_id'])
+        
         return with_ans_lm_inputs
     
     def preprocess_function_predict_generative(examples):
@@ -104,6 +114,7 @@ def get_dataloader_for_sentence_level_dataset_default(params, CL_dataset, tokeni
             For validation and test set for generative models (padding_side=left)
         '''
         no_ans_prompted_input_list = []
+        target_list = []
         for i in range(len(examples[input_column])):
             _input = examples[input_column][i]
             _target = examples[target_column][i]
@@ -112,6 +123,7 @@ def get_dataloader_for_sentence_level_dataset_default(params, CL_dataset, tokeni
                                                   prompt_type=params.prompt_type,
                                                   eos_token=eos_token,
                                                   dataset=params.dataset))
+            target_list.append(_target)
 
         print_max_len_information(tokenizer(no_ans_prompted_input_list)['input_ids'],params.max_seq_length)
         lm_inputs = tokenizer(no_ans_prompted_input_list, 
@@ -120,6 +132,15 @@ def get_dataloader_for_sentence_level_dataset_default(params, CL_dataset, tokeni
                               truncation=True)
         lm_inputs['label_idx_cil'] = deepcopy(examples['label_idx_cil'])
         lm_inputs['label_idx_til'] = deepcopy(examples['label_idx_til'])
+        lm_inputs['target'] = target_list
+
+        if 'instance_id' in examples.keys():
+            lm_inputs['instance_id'] = deepcopy(examples['instance_id'])
+        if 'concept_id' in examples.keys():
+            lm_inputs['concept_id'] = deepcopy(examples['concept_id'])
+        if 'relation_id' in examples.keys():
+            lm_inputs['relation_id'] = deepcopy(examples['relation_id'])
+
         return lm_inputs
 
     def preprocess_function_train_discriminative(examples):
@@ -129,6 +150,7 @@ def get_dataloader_for_sentence_level_dataset_default(params, CL_dataset, tokeni
         with_ans_prompted_input_list = []
         no_ans_prompted_input_list = []
         answer_list = []
+        target_list = []
         for i in range(len(examples[input_column])):
             _input = examples[input_column][i]
             _target = examples[target_column][i]
@@ -143,6 +165,7 @@ def get_dataloader_for_sentence_level_dataset_default(params, CL_dataset, tokeni
                                                          eos_token=eos_token,
                                                          dataset=params.dataset))
             answer_list.append(' {0}{1}'.format(_target,eos_token))
+            target_list.append(_target)
 
         # For training with Masked Language Modeling Loss
         print_max_len_information(tokenizer(with_ans_prompted_input_list)['input_ids'],params.max_seq_length)
@@ -155,6 +178,7 @@ def get_dataloader_for_sentence_level_dataset_default(params, CL_dataset, tokeni
         with_ans_lm_inputs['labels_with_ans'] = deepcopy(with_ans_lm_inputs['input_ids'])
         with_ans_lm_inputs['label_idx_cil'] = deepcopy(examples['label_idx_cil'])
         with_ans_lm_inputs['label_idx_til'] = deepcopy(examples['label_idx_til'])
+        with_ans_lm_inputs['target'] = target_list
         
         answer_lm_inputs = tokenizer(answer_list)
         for i, (attention_mask,answer_tokens) in enumerate(zip(with_ans_lm_inputs['attention_mask_with_ans'],answer_lm_inputs['input_ids'])):
@@ -193,6 +217,13 @@ def get_dataloader_for_sentence_level_dataset_default(params, CL_dataset, tokeni
         with_ans_lm_inputs['attention_mask'] = deepcopy(no_ans_lm_inputs['attention_mask'])
         del no_ans_lm_inputs
 
+        if 'instance_id' in examples.keys():
+            with_ans_lm_inputs['instance_id'] = deepcopy(examples['instance_id'])
+        if 'concept_id' in examples.keys():
+            with_ans_lm_inputs['concept_id'] = deepcopy(examples['concept_id'])
+        if 'relation_id' in examples.keys():
+            with_ans_lm_inputs['relation_id'] = deepcopy(examples['relation_id'])
+
         return with_ans_lm_inputs
     
     def preprocess_function_predict_discriminative(examples):
@@ -200,6 +231,7 @@ def get_dataloader_for_sentence_level_dataset_default(params, CL_dataset, tokeni
             For validation and test set for discriminative models (padding_side=right)
         '''
         no_ans_prompted_input_list = []
+        target_list = []
         for i in range(len(examples[input_column])):
             _input = examples[input_column][i]
             _target = examples[target_column][i]
@@ -208,6 +240,7 @@ def get_dataloader_for_sentence_level_dataset_default(params, CL_dataset, tokeni
                                                   prompt_type=params.prompt_type,
                                                   eos_token=eos_token,
                                                   dataset=params.dataset))
+            target_list.append(_target)
 
         print_max_len_information(tokenizer(no_ans_prompted_input_list)['input_ids'],params.max_seq_length)
         lm_inputs = tokenizer(no_ans_prompted_input_list, 
@@ -216,6 +249,15 @@ def get_dataloader_for_sentence_level_dataset_default(params, CL_dataset, tokeni
                               truncation=True)
         lm_inputs['label_idx_cil'] = deepcopy(examples['label_idx_cil'])
         lm_inputs['label_idx_til'] = deepcopy(examples['label_idx_til'])
+        lm_inputs['target'] = target_list
+
+        if 'instance_id' in examples.keys():
+            lm_inputs['instance_id'] = deepcopy(examples['instance_id'])
+        if 'concept_id' in examples.keys():
+            lm_inputs['concept_id'] = deepcopy(examples['concept_id'])
+        if 'relation_id' in examples.keys():
+            lm_inputs['relation_id'] = deepcopy(examples['relation_id'])
+
         return lm_inputs
 
     train_loader_list, dev_loader_list, test_loader_list = [], [], []
@@ -232,9 +274,15 @@ def get_dataloader_for_sentence_level_dataset_default(params, CL_dataset, tokeni
                                           batched=True, 
                                           desc='Task %d Train Set'%(task_id+1), 
                                           batch_size=1000 if len(train_dataset)<20000 else 10000)
-        train_dataset.set_format(type='torch', columns=['input_ids','attention_mask',
-                                                        'label_idx_cil','label_idx_til',
-                                                        'input_ids_with_ans', 'attention_mask_with_ans', 'labels_with_ans'])
+        if params.il_mode == 'IIL':
+            train_dataset.set_format(type='torch', columns=['input_ids','attention_mask',
+                                                            'label_idx_cil','label_idx_til',
+                                                            'input_ids_with_ans', 'attention_mask_with_ans', 'labels_with_ans','target',
+                                                            'instance_id','concept_id','relation_id'])
+        else:
+            train_dataset.set_format(type='torch', columns=['input_ids','attention_mask',
+                                                            'label_idx_cil','label_idx_til',
+                                                            'input_ids_with_ans', 'attention_mask_with_ans', 'labels_with_ans','target'])
         train_loader_list.append(
             DataLoader(train_dataset, 
                         batch_size=batch_size, 
@@ -247,8 +295,13 @@ def get_dataloader_for_sentence_level_dataset_default(params, CL_dataset, tokeni
                                       batched=True, 
                                       desc='Task %d Dev Set'%(task_id+1), 
                                       batch_size=1000)
-        dev_dataset.set_format(type='torch', columns=['input_ids','attention_mask',
-                                                      'label_idx_cil','label_idx_til'])
+        if params.il_mode == 'IIL':
+            dev_dataset.set_format(type='torch', columns=['input_ids','attention_mask',
+                                                        'label_idx_cil','label_idx_til','target',
+                                                        'instance_id','concept_id','relation_id'])
+        else:
+            dev_dataset.set_format(type='torch', columns=['input_ids','attention_mask',
+                                                        'label_idx_cil','label_idx_til','target'])
         dev_loader_list.append(
             DataLoader(dev_dataset, 
                     batch_size=batch_size, 
@@ -261,8 +314,13 @@ def get_dataloader_for_sentence_level_dataset_default(params, CL_dataset, tokeni
                                         batched=True, 
                                         desc='Task %d Test Set'%(task_id+1), 
                                         batch_size=1000)
-        test_dataset.set_format(type='torch', columns=['input_ids','attention_mask',
-                                                       'label_idx_cil','label_idx_til'])
+        if params.il_mode == 'IIL':
+            test_dataset.set_format(type='torch', columns=['input_ids','attention_mask',
+                                                        'label_idx_cil','label_idx_til','target',
+                                                        'instance_id','concept_id','relation_id'])
+        else:
+            test_dataset.set_format(type='torch', columns=['input_ids','attention_mask',
+                                                        'label_idx_cil','label_idx_til','target'])
         test_loader_list.append(
             DataLoader(test_dataset, 
                     batch_size=batch_size, 
@@ -286,6 +344,7 @@ def preprocess_function_train_and_predict_generative_PCLL(examples,params,tokeni
     prompt_input_anstoken_list = []
     prompt_input_anstoken_ans_list = []
     answer_list = []
+    target_list = []
     for i in range(len(examples[input_column])):
         _input = examples[input_column][i]
         _target = examples[target_column][i]
@@ -300,6 +359,7 @@ def preprocess_function_train_and_predict_generative_PCLL(examples,params,tokeni
         prompt_input_anstoken_ans_list.append(four_input_variants[3])
         inputsentence_list.append(_input+eos_token)
         answer_list.append(' {0}{1}'.format(_target,eos_token))
+        target_list.append(_target)
 
 
     # For training conditional VAE
@@ -394,6 +454,15 @@ def preprocess_function_train_and_predict_generative_PCLL(examples,params,tokeni
         non_pad_len = sum(lm_inputs['attention_mask_prompt_input_anstoken_ans'][i]) - 1 # remove the generation token at the begining
         lm_inputs['labels_gen_prompt_input_anstoken_ans'][i][:-non_pad_len] = [-100]*(len(lm_inputs['labels_gen_prompt_input_anstoken_ans'][i])-non_pad_len)
 
+    lm_inputs['target'] = target_list
+
+    if 'instance_id' in examples.keys():
+        lm_inputs['instance_id'] = deepcopy(examples['instance_id'])
+    if 'concept_id' in examples.keys():
+        lm_inputs['concept_id'] = deepcopy(examples['concept_id'])
+    if 'relation_id' in examples.keys():
+        lm_inputs['relation_id'] = deepcopy(examples['relation_id'])
+
     return lm_inputs
 
 def get_dataloader_for_sentence_level_dataset_PCLL(params, CL_dataset, tokenizer):
@@ -439,14 +508,25 @@ def get_dataloader_for_sentence_level_dataset_PCLL(params, CL_dataset, tokenizer
                                               'eos_token':eos_token,
                                               'gen_token':gen_token,
                                           })
-        train_dataset.set_format(type='torch', columns=[
-            'input_ids', 'attention_mask',
-            'label_idx_cil', 'label_idx_til',
-            'input_ids_prompt', 'attention_mask_prompt',
-            'input_ids_prompt_input', 'attention_mask_prompt_input', 'labels_gen_prompt_input',
-            'input_ids_prompt_input_anstoken', 'attention_mask_prompt_input_anstoken',
-            'input_ids_prompt_input_anstoken_ans', 'attention_mask_prompt_input_anstoken_ans', 'labels_qa_prompt_input_anstoken_ans', 'labels_gen_prompt_input_anstoken_ans'
-        ])
+        if params.il_mode == 'IIL':
+            train_dataset.set_format(type='torch', columns=[
+                'input_ids', 'attention_mask',
+                'label_idx_cil', 'label_idx_til',
+                'input_ids_prompt', 'attention_mask_prompt',
+                'input_ids_prompt_input', 'attention_mask_prompt_input', 'labels_gen_prompt_input',
+                'input_ids_prompt_input_anstoken', 'attention_mask_prompt_input_anstoken',
+                'input_ids_prompt_input_anstoken_ans', 'attention_mask_prompt_input_anstoken_ans', 'labels_qa_prompt_input_anstoken_ans', 'labels_gen_prompt_input_anstoken_ans',
+                'target', 'instance_id', 'concept_id', 'relation_id'
+            ])
+        else:
+            train_dataset.set_format(type='torch', columns=[
+                'input_ids', 'attention_mask',
+                'label_idx_cil', 'label_idx_til',
+                'input_ids_prompt', 'attention_mask_prompt',
+                'input_ids_prompt_input', 'attention_mask_prompt_input', 'labels_gen_prompt_input',
+                'input_ids_prompt_input_anstoken', 'attention_mask_prompt_input_anstoken',
+                'input_ids_prompt_input_anstoken_ans', 'attention_mask_prompt_input_anstoken_ans', 'labels_qa_prompt_input_anstoken_ans', 'labels_gen_prompt_input_anstoken_ans'
+            ])
         train_loader_list.append(
             DataLoader(train_dataset, 
                         batch_size=batch_size, 
@@ -469,14 +549,26 @@ def get_dataloader_for_sentence_level_dataset_PCLL(params, CL_dataset, tokenizer
                                               'eos_token':eos_token,
                                               'gen_token':gen_token,
                                      })
-        dev_dataset.set_format(type='torch', columns=[
-            'input_ids', 'attention_mask',
-            'label_idx_cil', 'label_idx_til',
-            'input_ids_prompt', 'attention_mask_prompt',
-            'input_ids_prompt_input', 'attention_mask_prompt_input', 'labels_gen_prompt_input',
-            'input_ids_prompt_input_anstoken', 'attention_mask_prompt_input_anstoken',
-            'input_ids_prompt_input_anstoken_ans', 'attention_mask_prompt_input_anstoken_ans', 'labels_qa_prompt_input_anstoken_ans', 'labels_gen_prompt_input_anstoken_ans'
-        ])
+        if params.il_mode == 'IIL':
+            dev_dataset.set_format(type='torch', columns=[
+                'input_ids', 'attention_mask',
+                'label_idx_cil', 'label_idx_til',
+                'input_ids_prompt', 'attention_mask_prompt',
+                'input_ids_prompt_input', 'attention_mask_prompt_input', 'labels_gen_prompt_input',
+                'input_ids_prompt_input_anstoken', 'attention_mask_prompt_input_anstoken',
+                'input_ids_prompt_input_anstoken_ans', 'attention_mask_prompt_input_anstoken_ans', 'labels_qa_prompt_input_anstoken_ans', 'labels_gen_prompt_input_anstoken_ans',
+                'target', 'instance_id', 'concept_id', 'relation_id'
+            ])
+        else:
+            
+            dev_dataset.set_format(type='torch', columns=[
+                'input_ids', 'attention_mask',
+                'label_idx_cil', 'label_idx_til',
+                'input_ids_prompt', 'attention_mask_prompt',
+                'input_ids_prompt_input', 'attention_mask_prompt_input', 'labels_gen_prompt_input',
+                'input_ids_prompt_input_anstoken', 'attention_mask_prompt_input_anstoken',
+                'input_ids_prompt_input_anstoken_ans', 'attention_mask_prompt_input_anstoken_ans', 'labels_qa_prompt_input_anstoken_ans', 'labels_gen_prompt_input_anstoken_ans'
+            ])
         dev_loader_list.append(
             DataLoader(dev_dataset, 
                     batch_size=batch_size, 
@@ -499,14 +591,25 @@ def get_dataloader_for_sentence_level_dataset_PCLL(params, CL_dataset, tokenizer
                                               'eos_token':eos_token,
                                               'gen_token':gen_token,
                                         })
-        test_dataset.set_format(type='torch', columns=[
-            'input_ids', 'attention_mask',
-            'label_idx_cil', 'label_idx_til',
-            'input_ids_prompt', 'attention_mask_prompt',
-            'input_ids_prompt_input', 'attention_mask_prompt_input', 'labels_gen_prompt_input',
-            'input_ids_prompt_input_anstoken', 'attention_mask_prompt_input_anstoken',
-            'input_ids_prompt_input_anstoken_ans', 'attention_mask_prompt_input_anstoken_ans', 'labels_qa_prompt_input_anstoken_ans', 'labels_gen_prompt_input_anstoken_ans'
-        ])
+        if params.il_mode == 'IIL':
+            test_dataset.set_format(type='torch', columns=[
+                'input_ids', 'attention_mask',
+                'label_idx_cil', 'label_idx_til',
+                'input_ids_prompt', 'attention_mask_prompt',
+                'input_ids_prompt_input', 'attention_mask_prompt_input', 'labels_gen_prompt_input',
+                'input_ids_prompt_input_anstoken', 'attention_mask_prompt_input_anstoken',
+                'input_ids_prompt_input_anstoken_ans', 'attention_mask_prompt_input_anstoken_ans', 'labels_qa_prompt_input_anstoken_ans', 'labels_gen_prompt_input_anstoken_ans',
+                'target', 'instance_id', 'concept_id', 'relation_id'
+            ])
+        else:
+            test_dataset.set_format(type='torch', columns=[
+                'input_ids', 'attention_mask',
+                'label_idx_cil', 'label_idx_til',
+                'input_ids_prompt', 'attention_mask_prompt',
+                'input_ids_prompt_input', 'attention_mask_prompt_input', 'labels_gen_prompt_input',
+                'input_ids_prompt_input_anstoken', 'attention_mask_prompt_input_anstoken',
+                'input_ids_prompt_input_anstoken_ans', 'attention_mask_prompt_input_anstoken_ans', 'labels_qa_prompt_input_anstoken_ans', 'labels_gen_prompt_input_anstoken_ans'
+            ])
         test_loader_list.append(
             DataLoader(test_dataset, 
                     batch_size=batch_size, 
@@ -528,6 +631,7 @@ def preprocess_function_train_generative_LAMOL(examples,params,tokenizer,num_tas
     with_gen_ans_prompted_input_list = []
     no_ans_prompted_input_list = []
     answer_list = []
+    target_list = []
     for i in range(len(examples[input_column])):
         _input = examples[input_column][i]
         _target = examples[target_column][i]
@@ -551,6 +655,7 @@ def preprocess_function_train_generative_LAMOL(examples,params,tokenizer,num_tas
                                                         eos_token=eos_token))
         # NOTE: No space before and after answertoken in LAMOL!!!
         answer_list.append('{0}{1}'.format(_target,eos_token)) 
+        target_list.append(_target)
 
 
     # For training with Causal Language Modeling Loss (QA target)
@@ -632,6 +737,15 @@ def preprocess_function_train_generative_LAMOL(examples,params,tokenizer,num_tas
                                 truncation=True)
     with_ans_lm_inputs['input_ids'] = deepcopy(no_ans_lm_inputs['input_ids'])
     with_ans_lm_inputs['attention_mask'] = deepcopy(no_ans_lm_inputs['attention_mask'])
+    with_ans_lm_inputs['target'] = deepcopy(target_list)
+
+    if 'instance_id' in examples.keys():
+        with_ans_lm_inputs['instance_id'] = deepcopy(examples['instance_id'])
+    if 'concept_id' in examples.keys():
+        with_ans_lm_inputs['concept_id'] = deepcopy(examples['concept_id'])
+    if 'relation_id' in examples.keys():
+        with_ans_lm_inputs['relation_id'] = deepcopy(examples['relation_id'])
+    
     del no_ans_lm_inputs
 
     return with_ans_lm_inputs
@@ -641,6 +755,7 @@ def preprocess_function_predict_generative_LAMOL(examples,params,tokenizer,input
         For validation and test set for generative models (padding_side=left)
     '''
     no_ans_prompted_input_list = []
+    target_list = []
     for i in range(len(examples[input_column])):
         _input = examples[input_column][i]
         _target = examples[target_column][i]
@@ -649,6 +764,7 @@ def preprocess_function_predict_generative_LAMOL(examples,params,tokenizer,input
                                                             gen_token='',
                                                             ans_token=ans_token,
                                                             eos_token=eos_token))
+        target_list.append(_target)
 
     print_max_len_information(tokenizer(no_ans_prompted_input_list)['input_ids'],params.max_seq_length)
     lm_inputs = tokenizer(no_ans_prompted_input_list, 
@@ -657,6 +773,15 @@ def preprocess_function_predict_generative_LAMOL(examples,params,tokenizer,input
                             truncation=True)
     lm_inputs['label_idx_cil'] = deepcopy(examples['label_idx_cil'])
     lm_inputs['label_idx_til'] = deepcopy(examples['label_idx_til'])
+    lm_inputs['target'] = target_list
+
+    if 'instance_id' in examples.keys():
+        lm_inputs['instance_id'] = deepcopy(examples['instance_id'])
+    if 'concept_id' in examples.keys():
+        lm_inputs['concept_id'] = deepcopy(examples['concept_id'])
+    if 'relation_id' in examples.keys():
+        lm_inputs['relation_id'] = deepcopy(examples['relation_id'])
+
     return lm_inputs
 
 def get_dataloader_for_sentence_level_dataset_LAMOL(params, CL_dataset, tokenizer):
@@ -710,10 +835,17 @@ def get_dataloader_for_sentence_level_dataset_LAMOL(params, CL_dataset, tokenize
                                               'eos_token':eos_token,
                                               'gen_token':gen_token,
                                           })
-        train_dataset.set_format(type='torch', columns=['input_ids','attention_mask',
-                                                        'label_idx_cil','label_idx_til',
-                                                        'input_ids_with_ans', 'attention_mask_with_ans', 'labels_with_ans', 
-                                                        'input_ids_with_gen_ans', 'attention_mask_with_gen_ans', 'labels_with_gen_ans'])
+        if params.il_mode == 'IIL':
+            train_dataset.set_format(type='torch', columns=['input_ids','attention_mask',
+                                                            'label_idx_cil','label_idx_til',
+                                                            'input_ids_with_ans', 'attention_mask_with_ans', 'labels_with_ans', 
+                                                            'input_ids_with_gen_ans', 'attention_mask_with_gen_ans', 'labels_with_gen_ans',
+                                                            'target', 'instance_id', 'concept_id', 'relation_id'])
+        else:
+            train_dataset.set_format(type='torch', columns=['input_ids','attention_mask',
+                                                            'label_idx_cil','label_idx_til',
+                                                            'input_ids_with_ans', 'attention_mask_with_ans', 'labels_with_ans', 
+                                                            'input_ids_with_gen_ans', 'attention_mask_with_gen_ans', 'labels_with_gen_ans'])
         train_loader_list.append(
             DataLoader(train_dataset, 
                         batch_size=batch_size, 
@@ -734,8 +866,13 @@ def get_dataloader_for_sentence_level_dataset_LAMOL(params, CL_dataset, tokenize
                                         'ans_token':ans_token,
                                         'eos_token':eos_token,
                                       })
-        dev_dataset.set_format(type='torch', columns=['input_ids','attention_mask',
-                                                      'label_idx_cil','label_idx_til'])
+        if params.il_mode == 'IIL':
+            dev_dataset.set_format(type='torch', columns=['input_ids','attention_mask',
+                                                        'label_idx_cil','label_idx_til',
+                                                        'target', 'instance_id', 'concept_id', 'relation_id'])
+        else:
+            dev_dataset.set_format(type='torch', columns=['input_ids','attention_mask',
+                                                        'label_idx_cil','label_idx_til'])
         dev_loader_list.append(
             DataLoader(dev_dataset, 
                     batch_size=batch_size, 
@@ -756,8 +893,13 @@ def get_dataloader_for_sentence_level_dataset_LAMOL(params, CL_dataset, tokenize
                                         'ans_token':ans_token,
                                         'eos_token':eos_token,
                                       })
-        test_dataset.set_format(type='torch', columns=['input_ids','attention_mask',
-                                                       'label_idx_cil','label_idx_til'])
+        if params.il_mode == 'IIL':
+            test_dataset.set_format(type='torch', columns=['input_ids','attention_mask',
+                                                        'label_idx_cil','label_idx_til',
+                                                        'target', 'instance_id', 'concept_id', 'relation_id'])
+        else:
+            test_dataset.set_format(type='torch', columns=['input_ids','attention_mask',
+                                                        'label_idx_cil','label_idx_til'])
         test_loader_list.append(
             DataLoader(test_dataset, 
                     batch_size=batch_size, 

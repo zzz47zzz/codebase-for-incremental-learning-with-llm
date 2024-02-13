@@ -1,0 +1,18 @@
+il_mode: IIL
+
+dataset: concept_1k_task10
+
+classification_type: auto
+
+backbone_extract_token: last_token
+
+classifier: None
+
+Replay_batch_level: False
+
+method: SEQ
+
+lr: 1e-5
+info_per_steps: 25
+
+prompt_type: auto

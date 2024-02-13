@@ -15,7 +15,7 @@ do
     # ========================================================================================================================
 
     # ---------------------------------------------------------------------------------------------------------------------------
-    wandb_setting='--is_wandb True --wandb_project Class-Incremental-NER --wandb_entity junhao-zheng'
+    wandb_setting='--is_wandb True --wandb_project Class-Incremental-NER --wandb_entity your-name'
     # ---------------------------------------------------------------------------------------------------------------------------
     accelerate launch $config_setting main_CL.py $wandb_setting --exp_prefix $exp_prefix-$backbone-$classifier --cfg './config/CIL/discriminative_backbones/ontonotes5_task6_base8_inc2/SEQ_full.yaml' --backbone $backbone --classifier $classifier --training_epochs 5 --evaluate_interval -1 --is_probing True
     accelerate launch $config_setting main_CL.py $wandb_setting --exp_prefix $exp_prefix-$backbone-$classifier --cfg './config/CIL/discriminative_backbones/i2b2_task5_base8_inc2/SEQ_full.yaml' --backbone $backbone --classifier $classifier --training_epochs 5 --evaluate_interval -1 --is_probing True
@@ -32,7 +32,7 @@ do
     # ========================================================================================================================
 
     # ---------------------------------------------------------------------------------------------------------------------------
-    wandb_setting='--is_wandb True --wandb_project Class-Incremental-NER --wandb_entity junhao-zheng'
+    wandb_setting='--is_wandb True --wandb_project Class-Incremental-NER --wandb_entity your-name'
     # ---------------------------------------------------------------------------------------------------------------------------
     accelerate launch $config_setting main_CL.py $wandb_setting --exp_prefix $exp_prefix-$backbone-$classifier --cfg './config/CIL/discriminative_backbones/ontonotes5_task6_base8_inc2/SEQ_full.yaml' --backbone $backbone --classifier $classifier --training_epochs 5 --evaluate_interval -1 --is_probing True
     accelerate launch $config_setting main_CL.py $wandb_setting --exp_prefix $exp_prefix-$backbone-$classifier --cfg './config/CIL/discriminative_backbones/i2b2_task5_base8_inc2/SEQ_full.yaml' --backbone $backbone --classifier $classifier --training_epochs 5 --evaluate_interval -1 --is_probing True
@@ -50,7 +50,7 @@ do
     # ========================================================================================================================
 
     # ---------------------------------------------------------------------------------------------------------------------------
-    wandb_setting='--is_wandb True --wandb_project Class-Incremental-NER --wandb_entity junhao-zheng'
+    wandb_setting='--is_wandb True --wandb_project Class-Incremental-NER --wandb_entity your-name'
     # ---------------------------------------------------------------------------------------------------------------------------
     accelerate launch $config_setting main_CL.py $wandb_setting --exp_prefix $exp_prefix-$backbone-$classifier --cfg './config/CIL/discriminative_backbones/ontonotes5_task6_base8_inc2/SEQ_full.yaml' --backbone $backbone --classifier $classifier --training_epochs 5 --evaluate_interval -1 --is_probing True
     accelerate launch $config_setting main_CL.py $wandb_setting --exp_prefix $exp_prefix-$backbone-$classifier --cfg './config/CIL/discriminative_backbones/i2b2_task5_base8_inc2/SEQ_full.yaml' --backbone $backbone --classifier $classifier --training_epochs 5 --evaluate_interval -1 --is_probing True
@@ -68,7 +68,7 @@ do
     # ========================================================================================================================
 
     # ---------------------------------------------------------------------------------------------------------------------------
-    wandb_setting='--is_wandb True --wandb_project Class-Incremental-NER --wandb_entity junhao-zheng'
+    wandb_setting='--is_wandb True --wandb_project Class-Incremental-NER --wandb_entity your-name'
     # ---------------------------------------------------------------------------------------------------------------------------
     accelerate launch $config_setting main_CL.py $wandb_setting --exp_prefix $exp_prefix-$backbone-$classifier --cfg './config/CIL/discriminative_backbones/ontonotes5_task6_base8_inc2/SEQ_full.yaml' --backbone $backbone --classifier $classifier --training_epochs 5 --evaluate_interval -1 --is_probing True
     accelerate launch $config_setting main_CL.py $wandb_setting --exp_prefix $exp_prefix-$backbone-$classifier --cfg './config/CIL/discriminative_backbones/i2b2_task5_base8_inc2/SEQ_full.yaml' --backbone $backbone --classifier $classifier --training_epochs 5 --evaluate_interval -1 --is_probing True

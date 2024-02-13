@@ -12,7 +12,7 @@ do
     # ========================================================================================================================
 
     # ---------------------------------------------------------------------------------------------------------------------------
-    wandb_setting='--is_wandb True --wandb_project Class-Incremental-TextClassification --wandb_entity junhao-zheng'
+    wandb_setting='--is_wandb True --wandb_project Class-Incremental-TextClassification --wandb_entity your-name'
     # ---------------------------------------------------------------------------------------------------------------------------
     accelerate launch $config_setting main_CL.py $wandb_setting --exp_prefix $exp_prefix-$backbone-$classifier --cfg './config/CIL/generative_backbones/topic3datasets_task5/SEQ_full.yaml' --backbone $backbone --classifier $classifier --training_epochs 3 --evaluate_interval -1 --is_probing True --probing_n_metrics 1
 
@@ -24,7 +24,7 @@ do
     # ========================================================================================================================
 
     # ---------------------------------------------------------------------------------------------------------------------------
-    wandb_setting='--is_wandb True --wandb_project Class-Incremental-TextClassification --wandb_entity junhao-zheng'
+    wandb_setting='--is_wandb True --wandb_project Class-Incremental-TextClassification --wandb_entity your-name'
     # ---------------------------------------------------------------------------------------------------------------------------
     accelerate launch $config_setting main_CL.py $wandb_setting --exp_prefix $exp_prefix-$backbone-$classifier --cfg './config/CIL/generative_backbones/topic3datasets_task5/SEQ_full.yaml' --backbone $backbone --classifier $classifier --training_epochs 3 --evaluate_interval -1 --is_probing True --probing_n_metrics 1
 
@@ -36,7 +36,7 @@ do
     # ========================================================================================================================
 
     # ---------------------------------------------------------------------------------------------------------------------------
-    wandb_setting='--is_wandb True --wandb_project Class-Incremental-TextClassification --wandb_entity junhao-zheng'
+    wandb_setting='--is_wandb True --wandb_project Class-Incremental-TextClassification --wandb_entity your-name'
     # ---------------------------------------------------------------------------------------------------------------------------
     accelerate launch $config_setting main_CL.py $wandb_setting --exp_prefix $exp_prefix-$backbone-$classifier --cfg './config/CIL/generative_backbones/topic3datasets_task5/SEQ_full.yaml' --backbone $backbone --classifier $classifier --training_epochs 3 --evaluate_interval -1 --is_probing True --probing_n_metrics 1
 
@@ -48,7 +48,7 @@ do
     # ========================================================================================================================
 
     # ---------------------------------------------------------------------------------------------------------------------------
-    wandb_setting='--is_wandb True --wandb_project Class-Incremental-TextClassification --wandb_entity junhao-zheng'
+    wandb_setting='--is_wandb True --wandb_project Class-Incremental-TextClassification --wandb_entity your-name'
     # ---------------------------------------------------------------------------------------------------------------------------
     accelerate launch $config_setting main_CL.py $wandb_setting --exp_prefix $exp_prefix-$backbone-$classifier --cfg './config/CIL/generative_backbones/topic3datasets_task5/SEQ_warm_fix.yaml' --backbone $backbone --classifier $classifier --training_epochs 3 --evaluate_interval -1 --is_probing True --probing_n_metrics 1
     accelerate launch $config_setting main_CL.py $wandb_setting --exp_prefix $exp_prefix-$backbone-$classifier --cfg './config/CIL/generative_backbones/topic3datasets_task5/SEQ_pre_warm_fix.yaml' --backbone $backbone --classifier $classifier --training_epochs 3 --evaluate_interval -1 --is_probing True --probing_n_metrics 1
@@ -62,7 +62,7 @@ do
     # ========================================================================================================================
 
     # ---------------------------------------------------------------------------------------------------------------------------
-    wandb_setting='--is_wandb True --wandb_project Class-Incremental-TextClassification --wandb_entity junhao-zheng'
+    wandb_setting='--is_wandb True --wandb_project Class-Incremental-TextClassification --wandb_entity your-name'
     # ---------------------------------------------------------------------------------------------------------------------------
     accelerate launch $config_setting main_CL.py $wandb_setting --exp_prefix $exp_prefix-$backbone-$classifier --cfg './config/CIL/generative_backbones/topic3datasets_task5/SEQ_warm_fix.yaml' --backbone $backbone --classifier $classifier --training_epochs 3 --evaluate_interval -1 --is_probing True --probing_n_metrics 1
     accelerate launch $config_setting main_CL.py $wandb_setting --exp_prefix $exp_prefix-$backbone-$classifier --cfg './config/CIL/generative_backbones/topic3datasets_task5/SEQ_pre_warm_fix.yaml' --backbone $backbone --classifier $classifier --training_epochs 3 --evaluate_interval -1 --is_probing True --probing_n_metrics 1
@@ -75,7 +75,7 @@ do
     # ========================================================================================================================
 
     # ---------------------------------------------------------------------------------------------------------------------------
-    wandb_setting='--is_wandb True --wandb_project Class-Incremental-TextClassification --wandb_entity junhao-zheng'
+    wandb_setting='--is_wandb True --wandb_project Class-Incremental-TextClassification --wandb_entity your-name'
     # ---------------------------------------------------------------------------------------------------------------------------
     accelerate launch $config_setting main_CL.py $wandb_setting --exp_prefix $exp_prefix-$backbone-$classifier --cfg './config/CIL/generative_backbones/topic3datasets_task5/SEQ_warm_fix.yaml' --backbone $backbone --classifier $classifier --training_epochs 3 --evaluate_interval -1 --is_probing True --probing_n_metrics 1
     accelerate launch $config_setting main_CL.py $wandb_setting --exp_prefix $exp_prefix-$backbone-$classifier --cfg './config/CIL/generative_backbones/topic3datasets_task5/SEQ_pre_warm_fix.yaml' --backbone $backbone --classifier $classifier --training_epochs 3 --evaluate_interval -1 --is_probing True --probing_n_metrics 1
@@ -89,7 +89,7 @@ do
     # ========================================================================================================================
 
     # ---------------------------------------------------------------------------------------------------------------------------
-    wandb_setting='--is_wandb True --wandb_project Class-Incremental-TextClassification --wandb_entity junhao-zheng'
+    wandb_setting='--is_wandb True --wandb_project Class-Incremental-TextClassification --wandb_entity your-name'
     # ---------------------------------------------------------------------------------------------------------------------------
     accelerate launch $config_setting main_CL.py $wandb_setting --exp_prefix $exp_prefix-$backbone-$classifier --cfg './config/CIL/generative_backbones/topic3datasets_task5/SEQ_warm_fix.yaml' --backbone $backbone --classifier $classifier --training_epochs 3 --evaluate_interval -1 --is_probing True --probing_n_metrics 1
     accelerate launch $config_setting main_CL.py $wandb_setting --exp_prefix $exp_prefix-$backbone-$classifier --cfg './config/CIL/generative_backbones/topic3datasets_task5/SEQ_pre_warm_fix.yaml' --backbone $backbone --classifier $classifier --training_epochs 3 --evaluate_interval -1 --is_probing True --probing_n_metrics 1
@@ -103,7 +103,7 @@ do
     # ========================================================================================================================
 
     # ---------------------------------------------------------------------------------------------------------------------------
-    wandb_setting='--is_wandb True --wandb_project Class-Incremental-TextClassification --wandb_entity junhao-zheng'
+    wandb_setting='--is_wandb True --wandb_project Class-Incremental-TextClassification --wandb_entity your-name'
     # ---------------------------------------------------------------------------------------------------------------------------
     accelerate launch $config_setting main_CL.py $wandb_setting --exp_prefix $exp_prefix-$backbone-$classifier --cfg './config/CIL/generative_backbones/topic3datasets_task5/SEQ_warm_fix.yaml' --backbone $backbone --classifier $classifier --training_epochs 3 --evaluate_interval -1 --is_probing True --probing_n_metrics 1
     accelerate launch $config_setting main_CL.py $wandb_setting --exp_prefix $exp_prefix-$backbone-$classifier --cfg './config/CIL/generative_backbones/topic3datasets_task5/SEQ_pre_warm_fix.yaml' --backbone $backbone --classifier $classifier --training_epochs 3 --evaluate_interval -1 --is_probing True --probing_n_metrics 1
@@ -117,7 +117,7 @@ do
     # ========================================================================================================================
 
     # ---------------------------------------------------------------------------------------------------------------------------
-    wandb_setting='--is_wandb True --wandb_project Class-Incremental-TextClassification --wandb_entity junhao-zheng'
+    wandb_setting='--is_wandb True --wandb_project Class-Incremental-TextClassification --wandb_entity your-name'
     # ---------------------------------------------------------------------------------------------------------------------------
     accelerate launch $config_setting main_CL.py $wandb_setting --exp_prefix $exp_prefix-$backbone-$classifier --cfg './config/CIL/generative_backbones/topic3datasets_task5/SEQ_warm_fix.yaml' --backbone $backbone --classifier $classifier --training_epochs 3 --evaluate_interval -1 --is_probing True --probing_n_metrics 1
     accelerate launch $config_setting main_CL.py $wandb_setting --exp_prefix $exp_prefix-$backbone-$classifier --cfg './config/CIL/generative_backbones/topic3datasets_task5/SEQ_pre_warm_fix.yaml' --backbone $backbone --classifier $classifier --training_epochs 3 --evaluate_interval -1 --is_probing True --probing_n_metrics 1
@@ -131,7 +131,7 @@ do
     # ========================================================================================================================
 
     # ---------------------------------------------------------------------------------------------------------------------------
-    wandb_setting='--is_wandb True --wandb_project Class-Incremental-TextClassification --wandb_entity junhao-zheng'
+    wandb_setting='--is_wandb True --wandb_project Class-Incremental-TextClassification --wandb_entity your-name'
     # ---------------------------------------------------------------------------------------------------------------------------
     accelerate launch $config_setting main_CL.py $wandb_setting --exp_prefix $exp_prefix-$backbone-$classifier --cfg './config/CIL/discriminative_backbones/topic3datasets_task5/SEQ_full.yaml' --backbone $backbone --classifier $classifier --training_epochs 3 --evaluate_interval -1 --is_probing True --probing_n_metrics 1
     accelerate launch $config_setting main_CL.py $wandb_setting --exp_prefix $exp_prefix-$backbone-$classifier --cfg './config/CIL/discriminative_backbones/topic3datasets_task5/SEQ_warm_fix.yaml' --backbone $backbone --classifier $classifier --training_epochs 3 --evaluate_interval -1 --is_probing True --probing_n_metrics 1
@@ -146,7 +146,7 @@ do
     # ========================================================================================================================
 
     # ---------------------------------------------------------------------------------------------------------------------------
-    wandb_setting='--is_wandb True --wandb_project Class-Incremental-TextClassification --wandb_entity junhao-zheng'
+    wandb_setting='--is_wandb True --wandb_project Class-Incremental-TextClassification --wandb_entity your-name'
     # ---------------------------------------------------------------------------------------------------------------------------
     accelerate launch $config_setting main_CL.py $wandb_setting --exp_prefix $exp_prefix-$backbone-$classifier --cfg './config/CIL/discriminative_backbones/topic3datasets_task5/SEQ_full.yaml' --backbone $backbone --classifier $classifier --training_epochs 3 --evaluate_interval -1 --is_probing True --probing_n_metrics 1
     accelerate launch $config_setting main_CL.py $wandb_setting --exp_prefix $exp_prefix-$backbone-$classifier --cfg './config/CIL/discriminative_backbones/topic3datasets_task5/SEQ_warm_fix.yaml' --backbone $backbone --classifier $classifier --training_epochs 3 --evaluate_interval -1 --is_probing True --probing_n_metrics 1
@@ -161,7 +161,7 @@ do
     # ========================================================================================================================
 
     # ---------------------------------------------------------------------------------------------------------------------------
-    wandb_setting='--is_wandb True --wandb_project Class-Incremental-TextClassification --wandb_entity junhao-zheng'
+    wandb_setting='--is_wandb True --wandb_project Class-Incremental-TextClassification --wandb_entity your-name'
     # ---------------------------------------------------------------------------------------------------------------------------
     accelerate launch $config_setting main_CL.py $wandb_setting --exp_prefix $exp_prefix-$backbone-$classifier --cfg './config/CIL/discriminative_backbones/topic3datasets_task5/SEQ_full.yaml' --backbone $backbone --classifier $classifier --training_epochs 3 --evaluate_interval -1 --is_probing True --probing_n_metrics 1
     accelerate launch $config_setting main_CL.py $wandb_setting --exp_prefix $exp_prefix-$backbone-$classifier --cfg './config/CIL/discriminative_backbones/topic3datasets_task5/SEQ_warm_fix.yaml' --backbone $backbone --classifier $classifier --training_epochs 3 --evaluate_interval -1 --is_probing True --probing_n_metrics 1
@@ -176,7 +176,7 @@ do
     # ========================================================================================================================
 
     # ---------------------------------------------------------------------------------------------------------------------------
-    wandb_setting='--is_wandb True --wandb_project Class-Incremental-TextClassification --wandb_entity junhao-zheng'
+    wandb_setting='--is_wandb True --wandb_project Class-Incremental-TextClassification --wandb_entity your-name'
     # ---------------------------------------------------------------------------------------------------------------------------
     accelerate launch $config_setting main_CL.py $wandb_setting --exp_prefix $exp_prefix-$backbone-$classifier --cfg './config/CIL/discriminative_backbones/topic3datasets_task5/SEQ_full.yaml' --backbone $backbone --classifier $classifier --training_epochs 3 --evaluate_interval -1 --is_probing True --probing_n_metrics 1
     accelerate launch $config_setting main_CL.py $wandb_setting --exp_prefix $exp_prefix-$backbone-$classifier --cfg './config/CIL/discriminative_backbones/topic3datasets_task5/SEQ_warm_fix.yaml' --backbone $backbone --classifier $classifier --training_epochs 3 --evaluate_interval -1 --is_probing True --probing_n_metrics 1

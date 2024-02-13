@@ -1,6 +1,7 @@
 import os
 import torch
-from transformers import AutoModelForCausalLM, AutoAdapterModel, AutoConfig, AutoTokenizer
+from adapters import AutoAdapterModel
+from transformers import AutoModelForCausalLM, AutoConfig, AutoTokenizer
 from peft import LoraConfig, PromptTuningConfig, PromptTuningInit, TaskType, get_peft_model
 
 from utils.prompt import get_auto_prompt_tuning_init_text
@@ -15,6 +16,9 @@ BACKBONE2TYPE = {
     'EleutherAI/pythia-1.4b-deduped':'generative',
     'EleutherAI/pythia-2.8b-deduped':'generative',
     'EleutherAI/pythia-2.8b-deduped':'generative',
+    'decapoda-research/llama-7b-hf':'generative',
+    'lmsys/vicuna-7b-v1.1':'generative',
+    'llama2-13b-orca-8k-3319':'generative',
     'roberta-base':'discriminative',
     'roberta-large':'discriminative',
     'bert-base-cased':'discriminative',
@@ -35,8 +39,9 @@ def get_backbone(params, num_task: int=1):
     else:
         assert params.backbone_type in ['generative','discriminative'], 'Invalid backbone type %s'%(params.backbone_type)
     
-    config = AutoConfig.from_pretrained(params.backbone)
-    config.return_dict = True
+    if params.backbone not in ['llama2-13b-orca-8k-3319']:
+        config = AutoConfig.from_pretrained(params.backbone)
+        config.return_dict = True
 
     if params.method == 'AdapterCL':
         model = AutoAdapterModel.from_pretrained(params.backbone, config=config)
@@ -44,15 +49,23 @@ def get_backbone(params, num_task: int=1):
     if params.method == 'CPFD':
         config.output_attentions = True
 
-    if params.backbone_revision is None or params.backbone_revision=='':
+    if params.backbone == 'llama2-13b-orca-8k-3319':
+        model = AutoModelForCausalLM.from_pretrained("../llama2-13b-orca-8k-3319", torch_dtype=torch.float16, low_cpu_mem_usage=True, device_map="auto")
+    elif params.backbone_revision is None or params.backbone_revision=='':
         model = AutoModelForCausalLM.from_pretrained(params.backbone, config=config)
     else:
-        model = AutoModelForCausalLM.from_pretrained(params.backbone, 
-                                                    revision=params.backbone_revision,
-                                                    cache_dir=os.path.join(params.backbone_cache_path,
-                                                            os.path.join(os.path.basename(params.backbone),
-                                                            params.backbone_revision)),
-                                                    config=config)
+        try:
+            model = AutoModelForCausalLM.from_pretrained(params.backbone, 
+                                                        revision=params.backbone_revision,
+                                                        cache_dir=os.path.join(params.backbone_cache_path,
+                                                                os.path.join(os.path.basename(params.backbone),
+                                                                params.backbone_revision)),
+                                                        config=config)
+        except:
+            model = AutoModelForCausalLM.from_pretrained(os.path.join(params.backbone_cache_path,
+                                                                os.path.join(os.path.basename(params.backbone),
+                                                                params.backbone_revision)),
+                                                        config=config)
 
     if params.backbone_random_init:
         model.apply(model._init_weights) # using apply() to init each submodule recursively
@@ -97,14 +110,27 @@ def get_backbone(params, num_task: int=1):
         model = get_peft_model(model, peft_config)
         model.print_trainable_parameters()
 
-    if params.backbone_revision is None or params.backbone_revision=='':
+    if params.backbone == 'decapoda-research/llama-7b-hf':
+        from transformers import LlamaTokenizer
+        tokenizer = LlamaTokenizer.from_pretrained(params.backbone, padding_side='left' if params.backbone_type == 'generative' else 'right')
+        tokenizer.pad_token = '[PAD]'
+        tokenizer.eos_token = '[PAD]'
+    elif params.backbone == 'llama2-13b-orca-8k-3319':
+        tokenizer = AutoTokenizer.from_pretrained("../llama2-13b-orca-8k-3319", use_fast=False, padding_side='left' if params.backbone_type == 'generative' else 'right')
+    elif params.backbone_revision is None or params.backbone_revision=='':
         tokenizer = AutoTokenizer.from_pretrained(params.backbone, padding_side='left' if params.backbone_type == 'generative' else 'right')
     else:
-        tokenizer = AutoTokenizer.from_pretrained(params.backbone, padding_side='left' if params.backbone_type == 'generative' else 'right',
-                                                        revision=params.backbone_revision,
-                                                        cache_dir=os.path.join(params.backbone_cache_path,
-                                                            os.path.join(os.path.basename(params.backbone),
-                                                            params.backbone_revision)))
+        try:
+            tokenizer = AutoTokenizer.from_pretrained(params.backbone, padding_side='left' if params.backbone_type == 'generative' else 'right',
+                                                            revision=params.backbone_revision,
+                                                            cache_dir=os.path.join(params.backbone_cache_path,
+                                                                os.path.join(os.path.basename(params.backbone),
+                                                                params.backbone_revision)))
+        except:
+            tokenizer = AutoTokenizer.from_pretrained(os.path.join(params.backbone_cache_path,
+                                                        os.path.join(os.path.basename(params.backbone),
+                                                        params.backbone_revision)),
+                                                    padding_side='left' if params.backbone_type == 'generative' else 'right')
 
     if tokenizer.pad_token is None:
         tokenizer.pad_token = tokenizer.eos_token

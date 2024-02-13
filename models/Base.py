@@ -100,12 +100,19 @@ class BaseLearner(object):
 
         result_dict = self.evaluate_model(task_id=task_id) 
         il_mode = self.params.il_mode      
-        for t_id, _acc in enumerate(result_dict['Acc_List']):
+        for t_id, _acc in enumerate(result_dict['Test_Acc_List']):
             self.result_summary.update(task_id, t_id, _acc)
         if self.accelerator.is_main_process:
-            logger.info('Mode = %s, Result Summary After Task %d = %s'%(il_mode, 
+            logger.info('Mode = %s, Result Summary Test After Task %d = \n%s'%(il_mode, 
                                                                         task_id,
                                                                         self.result_summary.print_format()))
+        if il_mode == 'IIL' and self.params.method != 'ICL':
+            for t_id, _acc in enumerate(result_dict['Train_Acc_List']):
+                self.result_summary_train.update(task_id, t_id, _acc)
+            if self.accelerator.is_main_process:
+                logger.info('Mode = %s, Result Summary Train After Task %d = \n%s'%(il_mode, 
+                                                                            task_id,
+                                                                            self.result_summary_train.print_format()))
 
         # save ckpt
         if self.params.save_ckpt:
@@ -146,19 +153,32 @@ class BaseLearner(object):
         log_dict = {}
         il_mode = self.params.il_mode
         if self.accelerator.is_main_process:
-            logger.info('Mode = %s, Summary Acc = %s'%(il_mode,self.result_summary.print_format()))
+            logger.info('Mode = %s, Summary Test Acc = \n%s'%(il_mode,self.result_summary.print_format()))
         # Compute Forward and Backward Transfer according to Result Summary for the whole learning process
         bwt_acc = compute_backward_transfer(self.result_summary.get_value()) 
         fgt_acc = compute_forgetting(self.result_summary.get_value()) 
         aver_acc = compute_average_acc(self.result_summary.get_value()) 
         aver_inc_acc = compute_average_inc_acc(self.result_summary.get_value()) 
-        log_dict['Aver_ACC'] = aver_acc
-        log_dict['Bwt_ACC'] = bwt_acc
-        log_dict['Fgt_ACC'] = fgt_acc
-        log_dict['Aver_Inc_ACC'] = aver_inc_acc
+        log_dict['Test_Aver_ACC'] = aver_acc
+        log_dict['Test_Bwt_ACC'] = bwt_acc
+        log_dict['Test_Fgt_ACC'] = fgt_acc
+        log_dict['Test_Aver_Inc_ACC'] = aver_inc_acc
+
+        if il_mode == 'IIL' and self.params.method != 'ICL':
+            if self.accelerator.is_main_process:
+                logger.info('Mode = %s, Summary Train Acc = \n%s'%(il_mode,self.result_summary_train.print_format()))
+            # Compute Forward and Backward Transfer according to Result Summary for the whole learning process
+            bwt_acc = compute_backward_transfer(self.result_summary_train.get_value()) 
+            fgt_acc = compute_forgetting(self.result_summary_train.get_value()) 
+            aver_acc = compute_average_acc(self.result_summary_train.get_value()) 
+            aver_inc_acc = compute_average_inc_acc(self.result_summary_train.get_value()) 
+            log_dict['Train_Aver_ACC'] = aver_acc
+            log_dict['Train_Bwt_ACC'] = bwt_acc
+            log_dict['Train_Fgt_ACC'] = fgt_acc
+            log_dict['Train_Aver_Inc_ACC'] = aver_inc_acc
 
         if self.accelerator.is_main_process:
-            logger.info('Mode = %s, Summary Result = %s'%(il_mode,log_dict))    
+            logger.info('Mode = %s, Summary Result = \n%s'%(il_mode,log_dict))    
         self.accelerator.log(log_dict,step=self.global_step)
     
         # Delete checkpoints
@@ -180,7 +200,7 @@ class BaseLearner(object):
         Return:
             - {
 
-                'Acc_List':[90.42, 92.19, ..., 87.54], # Observed result
+                'Test_Acc_List':[90.42, 92.19, ..., 87.54], # Observed result
                 
                 'LinearProb_List':[95.2, 94.7, ..., 91.3],          # Linear Probing Performance
 
@@ -193,6 +213,7 @@ class BaseLearner(object):
             }
         '''
         result_dict = {}
+        log_dict = {}
 
         # NOTE: 
         # When using classifier, we can only evaluate the model on the tasks which has been learned
@@ -200,19 +221,29 @@ class BaseLearner(object):
         # For example, it is meaningless to let a CIL model which has learned 50 classes to make predictions in 150 classes.
         cur_task_id = task_id
         il_mode = self.params.il_mode
-        acc_list = self.evaluate_all_seen_task_tc(cur_task_id, 'test', il_mode)
-        log_dict = {}
         
-        result_dict['Acc_List'] = acc_list
-        log_dict = {
-            'Test_Acc_Task_%d'%(t_id):acc_list[t_id]
-            for t_id in range(cur_task_id+1)
-        }
+        acc_list = self.evaluate_all_seen_task_tc(cur_task_id, 'test', il_mode)
+        result_dict['Test_Acc_List'] = acc_list
+        for t_id in range(cur_task_id+1):
+            log_dict['Test_Acc_Task_%d'%(t_id)] = acc_list[t_id]
         log_dict['Test_Acc_Task_Seen'] = np.round(np.mean(acc_list[:cur_task_id+1]),3)
         if self.params.classifier=='None':
             log_dict['Test_Acc_Task_All'] = np.round(np.mean(acc_list),3)
         if self.accelerator.is_main_process:
             logger.info('Mode = %s, Test Result = %s'%(il_mode, log_dict))
+        
+        # Additional Evaluation on training set for Instance Incremental Learning
+        if il_mode == 'IIL' and self.params.method != 'ICL':
+            acc_list = self.evaluate_all_seen_task_tc(cur_task_id, 'train', il_mode)
+            result_dict['Train_Acc_List'] = acc_list
+            for t_id in range(cur_task_id+1):
+                log_dict['Train_Acc_Task_%d'%(t_id)]=acc_list[t_id]
+            log_dict['Train_Acc_Task_Seen'] = np.round(np.mean(acc_list[:cur_task_id+1]),3)
+            if self.params.classifier=='None':
+                log_dict['Train_Acc_Task_All'] = np.round(np.mean(acc_list),3)
+            if self.accelerator.is_main_process:
+                logger.info('Mode = %s, Train Result = %s'%(il_mode, log_dict))
+
         self.accelerator.log(log_dict,step=self.global_step)
 
         if self.params.is_probing:
@@ -262,11 +293,26 @@ class BaseLearner(object):
         # Evaluate on all seen tasks
         if self.params.classification_type == 'sentence-level':
 
+            save_dict_all = None
+
             for eval_t_id in range(cur_task_id+1):
 
-                acc = self.evaluate_current_task(eval_t_id, cur_task_id, phase, il_mode)
+                if il_mode=='IIL':
+                    acc, save_dict = self.evaluate_current_task(eval_t_id, cur_task_id, phase, il_mode)
+                    if save_dict_all is not None:
+                        for k,v in save_dict.items():
+                            save_dict_all[k] = v
+                    else:
+                        save_dict_all = save_dict
+                else:
+                    acc = self.evaluate_current_task(eval_t_id, cur_task_id, phase, il_mode)
 
                 acc_list.append(acc)
+
+            if save_dict_all is not None:
+                with open(os.path.join(self.params.dump_path,
+                                       '%s_cur_task_%d_save_result.npy'%(phase,cur_task_id)),'wb') as f:
+                    np.save(f,save_dict_all)
 
         # Evaluate on all seen tasks
         # NOTE: We only test once because the test set of task task_id contains all seen labels from task 0 - task task_id)

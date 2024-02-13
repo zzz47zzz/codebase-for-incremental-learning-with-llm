@@ -6,6 +6,8 @@ from datasets import Dataset
 logger = logging.getLogger()
 
 DATASET2TYPE = {
+    'concept_1k_task1': 'sentence-level',
+    'concept_1k_task10': 'sentence-level',
     'topic3datasets_task5': 'sentence-level',
     'clinc150_task15':'sentence-level',
     'banking77_task7':'sentence-level',
@@ -20,6 +22,8 @@ DATASET2TYPE = {
 }
 
 DATASET2MAXLEN = {
+    'concept_1k_task1': 32,
+    'concept_1k_task10': 32,
     'topic3datasets_task5': 256,
     'clinc150_task15': 50,
     'banking77_task7': 64,
@@ -99,7 +103,8 @@ class Continual_Sentence_Level_Classification_Dataset(Continual_Dataset):
             [self.continual_data[i]['train'].shape[0] for i in range(self.continual_config['NUM_TASK'])], 
             [self.continual_data[i]['dev'].shape[0] for i in range(self.continual_config['NUM_TASK'])],
             [self.continual_data[i]['test'].shape[0] for i in range(self.continual_config['NUM_TASK'])]))
-        logger.info('Label_list = %s'%str(self.continual_config['LABEL_LIST'])) 
+        if 'LABEL_LIST' in self.continual_config:
+            logger.info('Label_list = %s'%str(self.continual_config['LABEL_LIST'])) 
 
 class Continual_Word_Level_Classification_Dataset(Continual_Dataset):
     '''

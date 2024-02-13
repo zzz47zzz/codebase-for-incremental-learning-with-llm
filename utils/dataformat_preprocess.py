@@ -7,16 +7,18 @@ import pandas as pd
 import random
 import pickle
 import argparse
+import re
 from collections import Counter
 
-support_dataset_list = ['topic3datasets','clinc150','banking77','clinc150_numbertarget','clinc150_classidxplusone',
+support_dataset_list = ['concept_400','concept_1k',
+                        'topic3datasets','clinc150','banking77','clinc150_numbertarget','clinc150_classidxplusone',
                         'fewrel','tacred','conll2003','i2b2','ontonotes5','fewnerd']
 
 def get_params():
     parser = argparse.ArgumentParser(description="The setting for preprocessing datasets")
 
     parser.add_argument("--dataset", type=str, 
-                        default='fewnerd', 
+                        default='concept_1k', 
                         choices=support_dataset_list, 
                         help="The dataset selected to be processed")
     parser.add_argument("--seed", 
@@ -116,7 +118,9 @@ def main(params):
         }
 
     '''
-    if params.dataset == 'topic3datasets':
+    if params.dataset == 'concept_1k':
+        preprocess_concept_1k()
+    elif params.dataset == 'topic3datasets':
         preprocess_topic3datasets(num_sample_train_per_class=params.num_sample_train_per_class,
                                   num_sample_test_per_class=params.num_sample_test_per_class)
     elif params.dataset == 'clinc150':
@@ -143,6 +147,307 @@ def main(params):
                                    seen_all_labels=params.seen_all_labels)
     else:
         raise NotImplementedError()
+
+def preprocess_concept_1k(num_task = 10):
+    '''
+        Preprocess concept 1k in source folder src_path and save the formatted dataset in target folder tgt_path. 
+    '''
+    generated_dataset_name = 'concept_1k_task%d'%(num_task)
+
+    src_path = './dataset/concept_1k'
+    tgt_path = './dataset/%s'%(generated_dataset_name)
+
+    if not os.path.isdir(tgt_path):
+        os.makedirs(tgt_path)
+    
+    NUM_TASK = num_task
+
+    train_x, train_y, train_concept_id, train_relation_id, train_instance_id = [], [], [], [], []
+    dev_x, dev_y, dev_concept_id, dev_relation_id, dev_instance_id = [], [], [], [], []
+    test_x, test_y, test_concept_id, test_relation_id, test_instance_id = [], [], [], [], []
+
+    concept_list = []
+    relation_list = []
+    instanceid_2_conceptid = []
+    instanceid_2_relationid = []
+    instanceid_2_target = []
+
+    with open(os.path.join(src_path,'dataset_2024_1_30_11_40.txt')) as f:
+        cur_triplet = []
+        instance = []
+        instanceid = 0
+        for i,line in enumerate(f.readlines()):
+            line = line.strip()
+            if len(line)==0:
+                continue
+            # Triplet
+            if line[0]=='(' and line[-1]==')':
+                # Save last instance
+                if len(instance)==4:
+
+                    if instance[1]==instance[3]:
+                
+                        instanceid_2_conceptid.append(concept_list.index(cur_triplet[0]))
+                        instanceid_2_relationid.append(relation_list.index(cur_triplet[1]))
+                        instanceid_2_target.append(cur_triplet[2])
+
+                        train_x.append(instance[0])
+                        train_y.append(instance[1])
+                        train_concept_id.append(concept_list.index(cur_triplet[0]))
+                        train_relation_id.append(relation_list.index(cur_triplet[1]))
+                        train_instance_id.append(instanceid)
+
+                        dev_x.append(instance[2])
+                        dev_y.append(instance[3])
+                        dev_concept_id.append(concept_list.index(cur_triplet[0]))
+                        dev_relation_id.append(relation_list.index(cur_triplet[1]))
+                        dev_instance_id.append(instanceid)
+
+                        test_x.append(instance[2])
+                        test_y.append(instance[3])
+                        test_concept_id.append(concept_list.index(cur_triplet[0]))
+                        test_relation_id.append(relation_list.index(cur_triplet[1]))
+                        test_instance_id.append(instanceid)
+
+                        instanceid += 1
+                    else:
+                        print('Error! %s'%(line))
+
+                elif i>0:
+                    print('Error! %s'%(line))
+                instance = []
+
+                # New instance
+                cur_triplet = line[1:-1].split(',')
+                if len(cur_triplet)<3:
+                    print('Error! %s'%(line))
+                    continue
+                elif len(cur_triplet)>3:
+                    print('Warning! %s'%(line))
+                    cur_triplet[0] = cur_triplet[0].strip()
+                    cur_triplet[1] = cur_triplet[1].strip()
+                    cur_triplet[2:] = ','.join(cur_triplet[2:]).strip()
+                else:
+                    cur_triplet[0] = cur_triplet[0].strip()
+                    cur_triplet[1] = cur_triplet[1].strip()
+                    cur_triplet[2] = cur_triplet[2].strip()
+
+                if cur_triplet[0] not in concept_list: 
+                    concept_list.append(cur_triplet[0])
+                if cur_triplet[1] not in relation_list: 
+                    relation_list.append(cur_triplet[1])
+                
+            elif '1: ' in line or '2: ' in line:
+                _, qa = line.split(': ')
+                instance.append(qa)
+
+        print('Train:',len(train_y))
+        print('Dev:',len(dev_y))
+        print('Test:',len(test_y))
+
+        print('Concept List = ',concept_list)
+        print('Relation List = ',relation_list)
+
+    num_instance = len(train_x)
+    num_concept = len(concept_list)
+    num_concept_per_task = num_concept//NUM_TASK
+    num_concept_base_task = num_concept - num_concept_per_task*(NUM_TASK-1)
+
+    # # Save Concepts
+    with open(os.path.join(src_path,'cur_concept.txt'),'w') as f1:
+        for _concept in concept_list:
+            f1.write('%s\n'%(_concept))
+
+    # Check concepts
+    # with open(os.path.join(src_path,'concepts.txt'),'r') as f1:
+    #     concepts_all = []
+    #     for line in f1.readlines():
+    #         _concept = line.strip()
+    #         if _concept not in concepts_all:
+    #             concepts_all.append(_concept)  
+
+    #     unseen_concept2 = []
+    #     for _concept in concepts_all:
+    #         if _concept not in concept_list:
+    #             unseen_concept2.append(_concept)
+    #     print('Unseen Concepts 2 = %s'%(unseen_concept2))
+
+    #     additional_concept2 = []
+    #     for _concept in concept_list:
+    #         if _concept in concepts_all:
+    #             additional_concept2.append(_concept)
+    #     print('Overlap Concepts 2 = %s'%(additional_concept2))     
+
+    # # # dedup triplet + remove relation + split words
+    # remove_relation_list = ['RelatedTo','Involves','HasContext','AssociatedWith',
+    #                         'ConceptuallyRelatedTo','LinkedTo','InContext','ConnectedTo',
+    #                         'IsRelatedTo','Involved']
+    # with open(os.path.join(src_path,'save_add_dataset_dedup_spilt.txt'),'w') as f1:
+    #     def split_on_uppercase(s, keep_contiguous=False):
+    #         """
+
+    #             Args:
+    #                 s (str): string
+    #                 keep_contiguous (bool): flag to indicate we want to
+    #                                         keep contiguous uppercase chars together
+
+    #             Returns:
+
+    #         """
+    #         string_length = len(s)
+    #         is_lower_around = (lambda: s[i-1].islower() or
+    #                         string_length > (i + 1) and s[i + 1].islower())
+
+    #         start = 0
+    #         parts = []
+    #         for i in range(1, string_length):
+    #             if s[i].isupper() and (not keep_contiguous or is_lower_around()):
+    #                 parts.append(s[start: i].lower())
+    #                 start = i
+    #         if (not keep_contiguous or is_lower_around()):
+    #             parts.append(s[start:].lower())
+    #         else:
+    #             parts.append(s[start:])
+    #         return parts
+    #     all_triplet = set()
+    #     all_triplet_list = []
+    #     for i,(x1,y1,x2,y2,target) in enumerate(zip(train_x,train_y,test_x,test_y,instanceid_2_target)):
+    #         cur_triplet = (instanceid_2_conceptid[i],instanceid_2_relationid[i])
+    #         if relation_list[instanceid_2_relationid[i]] in remove_relation_list:
+    #             continue
+    #         all_triplet_list.append(cur_triplet)
+    #         if cur_triplet not in all_triplet:
+    #             all_triplet.add(cur_triplet)
+    #             f1.write('(%s, %s, %s)\n'%(concept_list[instanceid_2_conceptid[i]],
+    #                                     relation_list[instanceid_2_relationid[i]],
+    #                                     target))
+    #             f1.write('Q1: %s\n'%(x1))
+    #             y1 = ' '.join(split_on_uppercase(y1, True))
+    #             # y1 = ' '.join([word.lower() for word in re.findall('^[a-z]+|[A-Z][^A-Z]*', y1)])
+    #             f1.write('A1: %s\n'%(y1.strip()))
+    #             f1.write('Q2: %s\n'%(x2))
+    #             y2 = ' '.join(split_on_uppercase(y2, True))
+    #             # y2 = ' '.join([word.lower() for word in re.findall('^[a-z]+|[A-Z][^A-Z]*', y2)])
+    #             f1.write('Q2: %s\n'%(y2.strip()))
+
+    #             # '- ' -> '-'
+    #             # 'wi fi' -> 'WiFi'
+    #             # '  ' -> ' '
+    count_dict = dict(Counter(instanceid_2_relationid))
+    sorted_keys = sorted(count_dict.keys(),key=lambda k:count_dict[k])
+    print([(relation_list[k],count_dict[k]) for k in sorted_keys])
+
+    # Shuffle Order
+    concept_order = list(range(num_concept))
+    random.shuffle(concept_order)
+    new_concept_list = []
+    for i in range(num_concept):
+        new_concept_list.append(concept_list[concept_order[i]])
+    concept_list = new_concept_list
+    for i in range(num_instance):
+        train_concept_id[i] = concept_order.index(train_concept_id[i])
+        dev_concept_id[i] = concept_order.index(dev_concept_id[i])
+        test_concept_id[i] = concept_order.index(test_concept_id[i])
+        instanceid_2_conceptid[i] = concept_order.index(instanceid_2_conceptid[i])
+
+    t_id = 0
+    CONCEPT_2_TASK = [t_id]*num_concept_base_task
+    for t_id in range(1,NUM_TASK):
+        CONCEPT_2_TASK.extend([t_id]*num_concept_per_task)
+
+    CUR_NUM_CLASS = [num_concept_base_task] + [num_concept_per_task]*(NUM_TASK-1)  
+    ACCUM_NUM_CLASS = np.cumsum(CUR_NUM_CLASS).tolist()
+    CUR_CLASS = [list(range(ACCUM_NUM_CLASS[i-1],ACCUM_NUM_CLASS[i])) 
+                 if i>0 else list(range(ACCUM_NUM_CLASS[i])) for i in range(len(ACCUM_NUM_CLASS))]
+    PRE_ACCUM_NUM_CLASS = [0]+ACCUM_NUM_CLASS[:-1]
+
+    continual_config = {
+        'NUM_TASK': NUM_TASK,
+        'NUM_CONCEPT': num_concept,
+        'CONCEPT_LIST': concept_list,
+        'RELATION_LIST': relation_list,
+        'CONCEPT_2_TASK': CONCEPT_2_TASK,
+        'NUM_CLASS': num_concept,
+        'LABEL_LIST': concept_list,
+        'CLASSNAME_LIST': concept_list,
+        'CUR_NUM_CLASS': CUR_NUM_CLASS,
+        'CUR_CLASS': CUR_CLASS,
+        'ACCUM_NUM_CLASS': ACCUM_NUM_CLASS,
+        'PRE_ACCUM_NUM_CLASS': PRE_ACCUM_NUM_CLASS,
+        'label2idx': [],
+        'idx2label': [],
+    }
+
+    continual_data = {}
+    for task_id in range(NUM_TASK):
+        one_task_data = {
+            'train':{
+                'input':[],
+                'target':[],
+                'concept_id': [],
+                'relation_id': [],
+                'instance_id': [],
+                'label_idx_cil': [],
+                'label_idx_til': [],
+            },
+            'dev':{
+                'input':[],
+                'target':[],
+                'concept_id': [],
+                'relation_id': [],
+                'instance_id': [],
+                'label_idx_cil': [],
+                'label_idx_til': [],
+            },
+            'test':{
+                'input':[],
+                'target':[],
+                'concept_id': [],
+                'relation_id': [],
+                'instance_id': [],
+                'label_idx_cil': [],
+                'label_idx_til': [],
+            }
+        }
+        continual_data[task_id] = one_task_data
+
+    for _input, _target, concept_id, relation_id, instance_id in zip(train_x, train_y, train_concept_id, train_relation_id, train_instance_id):
+        t_id = CONCEPT_2_TASK[concept_id]
+        continual_data[t_id]['train']['input'].append(_input)
+        continual_data[t_id]['train']['target'].append(_target)
+        continual_data[t_id]['train']['concept_id'].append(concept_id)
+        continual_data[t_id]['train']['relation_id'].append(relation_id)
+        continual_data[t_id]['train']['instance_id'].append(instance_id)
+        continual_data[t_id]['train']['label_idx_cil'].append(concept_id) # For data replay
+        continual_data[t_id]['train']['label_idx_til'].append(concept_id) # For data replay
+
+    for _input, _target, concept_id, relation_id, instance_id in zip(dev_x, dev_y, dev_concept_id, dev_relation_id, dev_instance_id):
+        t_id = CONCEPT_2_TASK[concept_id]
+        continual_data[t_id]['dev']['input'].append(_input)
+        continual_data[t_id]['dev']['target'].append(_target)
+        continual_data[t_id]['dev']['concept_id'].append(concept_id)
+        continual_data[t_id]['dev']['relation_id'].append(relation_id)
+        continual_data[t_id]['dev']['instance_id'].append(instance_id)
+        continual_data[t_id]['dev']['label_idx_cil'].append(concept_id) # For data replay
+        continual_data[t_id]['dev']['label_idx_til'].append(concept_id) # For data replay
+
+    for _input, _target, concept_id, relation_id, instance_id in zip(test_x, test_y, test_concept_id, test_relation_id, test_instance_id):
+        t_id = CONCEPT_2_TASK[concept_id]
+        continual_data[t_id]['test']['input'].append(_input)
+        continual_data[t_id]['test']['target'].append(_target)
+        continual_data[t_id]['test']['concept_id'].append(concept_id)
+        continual_data[t_id]['test']['relation_id'].append(relation_id)
+        continual_data[t_id]['test']['instance_id'].append(instance_id)
+        continual_data[t_id]['test']['label_idx_cil'].append(concept_id) # For data replay
+        continual_data[t_id]['test']['label_idx_til'].append(concept_id) # For data replay
+
+    with open(os.path.join(tgt_path,'continual_data.json'),'w') as f:
+        json.dump(continual_data,f)
+
+    with open(os.path.join(tgt_path,'continual_config.json'),'w') as f:
+        json.dump(continual_config,f)
+
+    print('Dataset %s is successful generated and saved into %s!'%(generated_dataset_name,tgt_path))
 
 def preprocess_topic3datasets(num_sample_train_per_class=1000,num_sample_test_per_class=1000):
     '''

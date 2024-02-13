@@ -366,6 +366,9 @@ def save_all_features_labels(params, save_name, train_loader_list, model, tokeni
     '''
         Save all features and labels
     '''
+    il_mode = params.il_mode
+    assert il_mode in ['CIL','TIL'], 'NotImplemented for il_mode %s'%(il_mode)
+    
     num_task = len(train_loader_list)
     with torch.no_grad():
         train_feature_list = []

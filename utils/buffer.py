@@ -161,8 +161,10 @@ class ReplayBuffer(object):
         for k,v in lm_input_list[0].items():
             if isinstance(v,torch.Tensor):
                 buffer_lm_input[k] = torch.stack([lm_input_list[i][k] for i in range(batch_size)],dim=0)
+            elif isinstance(v,str):
+                buffer_lm_input[k] = [lm_input_list[i][k] for i in range(batch_size)]
             else:
-                print('NOT implemented for combinging %s!'%(k))
+                print('NOT implemented for combining %s!'%(k))
 
         return buffer_lm_input
     
@@ -178,6 +180,8 @@ class ReplayBuffer(object):
         for k,v in lm_input_list[0].items():
             if isinstance(v,torch.Tensor):
                 buffer_lm_input[k] = torch.stack([lm_input_list[i][k] for i in range(len(lm_input_list))],dim=0)
+            elif isinstance(v,str):
+                buffer_lm_input[k] = [lm_input_list[i][k] for i in range(len(lm_input_list))]
             else:
                 print('NOT implemented for combinging %s!'%(k))
 

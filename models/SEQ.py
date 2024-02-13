@@ -36,10 +36,10 @@ def get_SEQ_params(parser):
     parser.add_argument("--PEFT_num_virtual_tokens", type=int, default=10, help="The number of tokens for prompt tuning")
     parser.add_argument("--PEFT_prompt_tuning_init_text", type=str, default='auto', help="The initialization words for prompt tuning")
     # For LoRA (more details can be found in this (url)[https://huggingface.co/docs/peft]
-    parser.add_argument("--PEFT_lora_r", type=int, default=4, help="The rank of lora")
-    parser.add_argument("--PEFT_lora_alpha", type=int, default=8, help="The scaling of lora")
+    parser.add_argument("--PEFT_lora_r", type=int, default=8, help="The rank of lora")
+    parser.add_argument("--PEFT_lora_alpha", type=int, default=16, help="The scaling of lora")
     parser.add_argument("--PEFT_lora_bias", type=str, default="none", help="The bias of lora")
-    parser.add_argument("--PEFT_lora_dropout", type=float, default=0.1, help="The dropout rate of lora")
+    parser.add_argument("--PEFT_lora_dropout", type=float, default=0.05, help="The dropout rate of lora")
     parser.add_argument("--PEFT_lora_target_modules", type=str, nargs='+', default=None, help="The target_modules of lora")
 
 class SEQ(BaseLearner):
@@ -49,7 +49,7 @@ class SEQ(BaseLearner):
     def __init__(self, params, CL_dataset, accelerator): 
         super().__init__(params, CL_dataset, accelerator)
         assert params.classifier in ['None','Linear','CosineLinear'], 'NotImplemented for classifier %s and model %s'%(params.classifier,'SEQ')
-        assert params.il_mode in ['CIL','TIL'], 'NotImplemented for il mode %s and model %s'%(params.il_mode,'SEQ')
+        assert params.il_mode in ['IIL','CIL','TIL'], 'NotImplemented for il mode %s and model %s'%(params.il_mode,'SEQ')
         assert params.classification_type in ['sentence-level','word-level'], 'NotImplemented for classification type %s'%(params.classification_type)
         if params.SEQ_use_prototype_for_prediction:
             assert params.classifier in ['Linear','CosineLinear']
@@ -57,6 +57,8 @@ class SEQ(BaseLearner):
     # ================================= Initialization =======================================
     def build_metric(self):
         self.result_summary = ResultSummary(num_task=self.CL_dataset.continual_config['NUM_TASK'])
+        if self.params.il_mode == 'IIL':
+            self.result_summary_train = ResultSummary(num_task=self.CL_dataset.continual_config['NUM_TASK'])
         
     def build_backbone(self):
         self.model, self.tokenizer = get_backbone(self.params)
@@ -315,7 +317,10 @@ class SEQ(BaseLearner):
         # For evaluation
         if (self.params.evaluate_interval>0) and epoch_id%self.params.evaluate_interval==0:
             il_mode = self.params.il_mode
-            acc = self.evaluate_current_task(task_id, task_id, 'dev', il_mode)
+            if il_mode == 'IIL':
+                acc, save_dict = self.evaluate_current_task(task_id, task_id, 'dev', il_mode)
+            else:
+                acc = self.evaluate_current_task(task_id, task_id, 'dev', il_mode)
             if self.accelerator.is_main_process:
                 logger.info("Mode %s, Current Task %d, Epoch %d, Step %d: Dev_acc=%.3f" % (
                     il_mode, task_id, epoch_id+1, self.step, acc
@@ -347,14 +352,14 @@ class SEQ(BaseLearner):
                 - cur_task_id: the id recording how many tasks the model has learned,
                 this information can be provided to the CIL model during inference.
                 - phase: 'train','dev'or'test'
-                - il_mode: 'CIL' or 'TIL'
+                - il_mode: 'IIL' or 'CIL' or 'TIL'
 
             Return:
                 - acc: CIL accuracy (%) or 'TIL': TIL accuracy (%)
         '''
 
         assert phase in ['train','test','dev']
-        assert il_mode in ['CIL','TIL'], 'NotImplemented for il_mode %s'%(il_mode)
+        assert il_mode in ['IIL','CIL','TIL'], 'NotImplemented for il_mode %s'%(il_mode)
         if phase=='train':
             data_loader = self.train_loader_list
         elif phase=='dev':

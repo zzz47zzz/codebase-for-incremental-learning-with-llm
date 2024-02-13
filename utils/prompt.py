@@ -1,5 +1,7 @@
 
 Dataset2Prompt = {
+    'concept_1k_task1': 'qa',
+    'concept_1k_task10': 'qa',
     'topic3datasets_task5': 'default',
     'clinc150_task15': 'default',
     'clinc150_task15_numbertarget': 'default',
@@ -10,6 +12,8 @@ Dataset2Prompt = {
 }
 
 Dataset2PromptTuningInitText = {
+    'concept_1k_task1': 'Answer the question below:',
+    'concept_1k_task10': 'Answer the question below:',
     'topic3datasets_task5': 'Classify the topic of this sentence:',
     'clinc150_task15': 'Classify the intent of this sentence:',
     'clinc150_task15_numbertarget': 'Classify the intent of this sentence:',
@@ -36,6 +40,12 @@ def get_prompt(text, label, prompt_type, eos_token='', dataset='clinc150_task15'
             return f'Input sentence: {text}\n The label:'
         else:
             return f'Input sentence: {text}\n The label: {label}{eos_token}'
+        
+    if prompt_type=='qa':
+        if label is None:
+            return f'Question: {text}\n Short Answer:'
+        else:
+            return f'Question: {text}\n Short Answer: {label}{eos_token}'
         
     if prompt_type in ['relation_classification_qa','relation_classification_state','relation_classification_state_no_pos']:
         entity_first_bg, entity_first_ed = text.find('[E11]'), text.find('[E12]')
@@ -111,3 +121,12 @@ def get_auto_prompt_tuning_init_text(dataset='clinc150_task15'):
     prompt_tuning_init_text = Dataset2PromptTuningInitText[dataset]
 
     return prompt_tuning_init_text
+
+def get_prompt_ICL(train_text_list, eval_text, prefix=''):
+    '''
+        Obtain prompt for inconext learning
+    '''
+    for train_text in train_text_list:
+        prefix += f'{train_text} \n'
+    prefix += f'{eval_text}'
+    return prefix

@@ -3,7 +3,7 @@ import logging
 import torch
 import torch.nn as nn
 import transformers
-from transformers import AdapterConfig
+# from transformers import AdapterConfig
 from peft import LoraConfig
 from copy import deepcopy
 

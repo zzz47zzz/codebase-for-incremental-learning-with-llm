@@ -46,7 +46,7 @@ class PCLL(BaseLearner):
         super().__init__(params, CL_dataset, accelerator)
 
         assert params.classifier in ['None'], 'NotImplemented for classifier %s and model %s'%(params.classifier,'PCLL')
-        assert params.il_mode in ['CIL','TIL'], 'NotImplemented for il mode %s and model %s'%(params.il_mode,'PCLL')
+        assert params.il_mode in ['IIL','CIL','TIL'], 'NotImplemented for il mode %s and model %s'%(params.il_mode,'PCLL')
         assert params.classification_type == 'sentence-level', 'NotImplemented for classification type %s'%(params.classification_type)
         assert params.backbone_type == 'generative', 'NotImplemented for backbone type %s'%(params.backbone_type)
         assert not params.is_replay, 'NotImplemented for is_replay = %s'%(params.is_replay)
@@ -54,6 +54,8 @@ class PCLL(BaseLearner):
     # ================================= Initialization =======================================
     def build_metric(self):
         self.result_summary = ResultSummary(num_task=self.CL_dataset.continual_config['NUM_TASK'])
+        if self.params.il_mode == 'IIL':
+            self.result_summary_train = ResultSummary(num_task=self.CL_dataset.continual_config['NUM_TASK'])
         
     def build_backbone(self):
         backbone_model, self.tokenizer = get_backbone(self.params)
@@ -228,7 +230,10 @@ class PCLL(BaseLearner):
         # For evaluation
         if (self.params.evaluate_interval>0) and epoch_id%self.params.evaluate_interval==0:
             il_mode = self.params.il_mode
-            acc = self.evaluate_current_task(task_id, task_id, 'dev', il_mode)
+            if il_mode == 'IIL':
+                acc, save_dict = self.evaluate_current_task(task_id, task_id, 'dev', il_mode)
+            else:
+                acc = self.evaluate_current_task(task_id, task_id, 'dev', il_mode)
             if self.accelerator.is_main_process:
                 logger.info("Mode %s, Current Task %d, Epoch %d, Step %d: Dev_acc=%.3f" % (
                     il_mode, task_id, epoch_id+1, self.step, acc
@@ -331,9 +336,15 @@ class PCLL(BaseLearner):
         
             for t_id in range(task_id):
 
-                pesudo_samples_dict = {
-                    'input': [], 'target': [], 'label_idx_cil': [], 'label_idx_til': []
-                }
+                if self.params.il_mode == 'IIL':
+                    pesudo_samples_dict = {
+                        'input': [], 'target': [], 'label_idx_cil': [], 'label_idx_til': [],
+                        'instance_id': [], 'concept_id': [], 'relation_id': [], 
+                    }
+                else:
+                        pesudo_samples_dict = {
+                        'input': [], 'target': [], 'label_idx_cil': [], 'label_idx_til': []
+                    }
 
                 cnt_num_samples = num_samples//task_id
 
@@ -382,6 +393,10 @@ class PCLL(BaseLearner):
                         pesudo_samples_dict['target'].append(_answer)
                         pesudo_samples_dict['label_idx_cil'].append(-1)
                         pesudo_samples_dict['label_idx_til'].append(-1)
+                        if self.params.il_mode == 'IIL':
+                            pesudo_samples_dict['instance_id'].append(-1)
+                            pesudo_samples_dict['concept_id'].append(-1)
+                            pesudo_samples_dict['relation_id'].append(-1)
                         
                     cnt_num_samples -= generate_num
             
@@ -403,14 +418,25 @@ class PCLL(BaseLearner):
                                                         'eos_token':eos_token,
                                                         'gen_token':gen_token,
                                                     })
-                pseudo_dataset.set_format(type='torch', columns=[
-                    'input_ids', 'attention_mask',
-                    'label_idx_cil', 'label_idx_til',
-                    'input_ids_prompt', 'attention_mask_prompt',
-                    'input_ids_prompt_input', 'attention_mask_prompt_input', 'labels_gen_prompt_input',
-                    'input_ids_prompt_input_anstoken', 'attention_mask_prompt_input_anstoken',
-                    'input_ids_prompt_input_anstoken_ans', 'attention_mask_prompt_input_anstoken_ans', 'labels_qa_prompt_input_anstoken_ans', 'labels_gen_prompt_input_anstoken_ans'
-                ])
+                if self.params.il_mode == 'IIL':
+                    pseudo_dataset.set_format(type='torch', columns=[
+                        'input_ids', 'attention_mask',
+                        'label_idx_cil', 'label_idx_til',
+                        'input_ids_prompt', 'attention_mask_prompt',
+                        'input_ids_prompt_input', 'attention_mask_prompt_input', 'labels_gen_prompt_input',
+                        'input_ids_prompt_input_anstoken', 'attention_mask_prompt_input_anstoken',
+                        'input_ids_prompt_input_anstoken_ans', 'attention_mask_prompt_input_anstoken_ans', 'labels_qa_prompt_input_anstoken_ans', 'labels_gen_prompt_input_anstoken_ans',
+                        'target', 'instance_id', 'concept_id', 'relation_id'
+                    ])
+                else:
+                    pseudo_dataset.set_format(type='torch', columns=[
+                        'input_ids', 'attention_mask',
+                        'label_idx_cil', 'label_idx_til',
+                        'input_ids_prompt', 'attention_mask_prompt',
+                        'input_ids_prompt_input', 'attention_mask_prompt_input', 'labels_gen_prompt_input',
+                        'input_ids_prompt_input_anstoken', 'attention_mask_prompt_input_anstoken',
+                        'input_ids_prompt_input_anstoken_ans', 'attention_mask_prompt_input_anstoken_ans', 'labels_qa_prompt_input_anstoken_ans', 'labels_gen_prompt_input_anstoken_ans'
+                    ])
 
                 pseudo_dataset_list.append(pseudo_dataset)
 

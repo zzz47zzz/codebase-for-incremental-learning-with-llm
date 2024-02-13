@@ -14,7 +14,7 @@ do
     # ========================================================================================================================
 
     # ---------------------------------------------------------------------------------------------------------------------------
-    wandb_setting='--is_wandb True --wandb_project Class-Incremental-IntentClassification --wandb_entity junhao-zheng'
+    wandb_setting='--is_wandb True --wandb_project Class-Incremental-IntentClassification --wandb_entity your-name'
     # ---------------------------------------------------------------------------------------------------------------------------
     # accelerate launch $config_setting main_CL.py $wandb_setting --exp_prefix $exp_prefix-$backbone-$classifier --cfg './config/CIL/generative_backbones/clinc150_task15/SEQ_full.yaml' --backbone $backbone --backbone_random_init $backbone_random_init --classifier $classifier --training_epochs 5 --evaluate_interval -1 --is_probing True
 
@@ -27,7 +27,7 @@ do
     # ========================================================================================================================
 
     # ---------------------------------------------------------------------------------------------------------------------------
-    wandb_setting='--is_wandb True --wandb_project Class-Incremental-IntentClassification --wandb_entity junhao-zheng'
+    wandb_setting='--is_wandb True --wandb_project Class-Incremental-IntentClassification --wandb_entity your-name'
     # ---------------------------------------------------------------------------------------------------------------------------
     # accelerate launch $config_setting main_CL.py $wandb_setting --exp_prefix $exp_prefix-$backbone-$classifier --cfg './config/CIL/generative_backbones/clinc150_task15/SEQ_full.yaml' --backbone $backbone --backbone_random_init $backbone_random_init --classifier $classifier --training_epochs 5 --evaluate_interval -1 --is_probing True
 
@@ -40,7 +40,7 @@ do
     # ========================================================================================================================
 
     # ---------------------------------------------------------------------------------------------------------------------------
-    wandb_setting='--is_wandb True --wandb_project Class-Incremental-IntentClassification --wandb_entity junhao-zheng'
+    wandb_setting='--is_wandb True --wandb_project Class-Incremental-IntentClassification --wandb_entity your-name'
     # ---------------------------------------------------------------------------------------------------------------------------
     # accelerate launch $config_setting main_CL.py $wandb_setting --exp_prefix $exp_prefix-$backbone-$classifier --cfg './config/CIL/generative_backbones/clinc150_task15/SEQ_full.yaml' --backbone $backbone --backbone_random_init $backbone_random_init --classifier $classifier --training_epochs 5 --evaluate_interval -1 --is_probing True
 
@@ -54,7 +54,7 @@ do
     # ========================================================================================================================
 
     # ---------------------------------------------------------------------------------------------------------------------------
-    wandb_setting='--is_wandb True --wandb_project Class-Incremental-IntentClassification --wandb_entity junhao-zheng'
+    wandb_setting='--is_wandb True --wandb_project Class-Incremental-IntentClassification --wandb_entity your-name'
     # ---------------------------------------------------------------------------------------------------------------------------
     # accelerate launch $config_setting main_CL.py $wandb_setting --exp_prefix $exp_prefix-$backbone-$classifier --cfg './config/CIL/generative_backbones/clinc150_task15/SEQ_full.yaml' --backbone $backbone --backbone_revision $backbone_revision --classifier $classifier --training_epochs 5 --evaluate_interval -1 --is_probing True
 
@@ -67,7 +67,7 @@ do
     # ========================================================================================================================
 
     # ---------------------------------------------------------------------------------------------------------------------------
-    wandb_setting='--is_wandb True --wandb_project Class-Incremental-IntentClassification --wandb_entity junhao-zheng'
+    wandb_setting='--is_wandb True --wandb_project Class-Incremental-IntentClassification --wandb_entity your-name'
     # ---------------------------------------------------------------------------------------------------------------------------
     # accelerate launch $config_setting main_CL.py $wandb_setting --exp_prefix $exp_prefix-$backbone-$classifier --cfg './config/CIL/generative_backbones/clinc150_task15/SEQ_full.yaml' --backbone $backbone --backbone_revision $backbone_revision --classifier $classifier --training_epochs 5 --evaluate_interval -1 --is_probing True
 
@@ -80,7 +80,7 @@ do
     # ========================================================================================================================
 
     # ---------------------------------------------------------------------------------------------------------------------------
-    wandb_setting='--is_wandb True --wandb_project Class-Incremental-IntentClassification --wandb_entity junhao-zheng'
+    wandb_setting='--is_wandb True --wandb_project Class-Incremental-IntentClassification --wandb_entity your-name'
     # ---------------------------------------------------------------------------------------------------------------------------
     # accelerate launch $config_setting main_CL.py $wandb_setting --exp_prefix $exp_prefix-$backbone-$classifier --cfg './config/CIL/generative_backbones/clinc150_task15/SEQ_full.yaml' --backbone $backbone --backbone_revision $backbone_revision --classifier $classifier --training_epochs 5 --evaluate_interval -1 --is_probing True
 
@@ -94,7 +94,7 @@ do
     # ========================================================================================================================
 
     # ---------------------------------------------------------------------------------------------------------------------------
-    wandb_setting='--is_wandb True --wandb_project Class-Incremental-IntentClassification --wandb_entity junhao-zheng'
+    wandb_setting='--is_wandb True --wandb_project Class-Incremental-IntentClassification --wandb_entity your-name'
     # ---------------------------------------------------------------------------------------------------------------------------
     # accelerate launch $config_setting main_CL.py $wandb_setting --exp_prefix $exp_prefix-$backbone-$classifier --cfg './config/CIL/generative_backbones/clinc150_task15/SEQ_full.yaml' --backbone $backbone --backbone_revision $backbone_revision --classifier $classifier --training_epochs 5 --evaluate_interval -1 --is_probing True
 
@@ -107,7 +107,7 @@ do
     # ========================================================================================================================
 
     # ---------------------------------------------------------------------------------------------------------------------------
-    wandb_setting='--is_wandb True --wandb_project Class-Incremental-IntentClassification --wandb_entity junhao-zheng'
+    wandb_setting='--is_wandb True --wandb_project Class-Incremental-IntentClassification --wandb_entity your-name'
     # ---------------------------------------------------------------------------------------------------------------------------
     # accelerate launch $config_setting main_CL.py $wandb_setting --exp_prefix $exp_prefix-$backbone-$classifier --cfg './config/CIL/generative_backbones/clinc150_task15/SEQ_full.yaml' --backbone $backbone --backbone_revision $backbone_revision --classifier $classifier --training_epochs 5 --evaluate_interval -1 --is_probing True
 
@@ -120,7 +120,7 @@ do
     # ========================================================================================================================
 
     # ---------------------------------------------------------------------------------------------------------------------------
-    wandb_setting='--is_wandb True --wandb_project Class-Incremental-IntentClassification --wandb_entity junhao-zheng'
+    wandb_setting='--is_wandb True --wandb_project Class-Incremental-IntentClassification --wandb_entity your-name'
     # ---------------------------------------------------------------------------------------------------------------------------
     # accelerate launch $config_setting main_CL.py $wandb_setting --exp_prefix $exp_prefix-$backbone-$classifier --cfg './config/CIL/generative_backbones/clinc150_task15/SEQ_full.yaml' --backbone $backbone --backbone_revision $backbone_revision --classifier $classifier --training_epochs 5 --evaluate_interval -1 --is_probing True
 
@@ -134,7 +134,7 @@ do
     # ========================================================================================================================
 
     # ---------------------------------------------------------------------------------------------------------------------------
-    wandb_setting='--is_wandb True --wandb_project Class-Incremental-IntentClassification --wandb_entity junhao-zheng'
+    wandb_setting='--is_wandb True --wandb_project Class-Incremental-IntentClassification --wandb_entity your-name'
     # ---------------------------------------------------------------------------------------------------------------------------
     # accelerate launch $config_setting main_CL.py $wandb_setting --exp_prefix $exp_prefix-$backbone-$classifier --cfg './config/CIL/generative_backbones/clinc150_task15/SEQ_full.yaml' --backbone $backbone --backbone_revision $backbone_revision --classifier $classifier --training_epochs 5 --evaluate_interval -1 --is_probing True
 
@@ -147,7 +147,7 @@ do
     # ========================================================================================================================
 
     # ---------------------------------------------------------------------------------------------------------------------------
-    wandb_setting='--is_wandb True --wandb_project Class-Incremental-IntentClassification --wandb_entity junhao-zheng'
+    wandb_setting='--is_wandb True --wandb_project Class-Incremental-IntentClassification --wandb_entity your-name'
     # ---------------------------------------------------------------------------------------------------------------------------
     # accelerate launch $config_setting main_CL.py $wandb_setting --exp_prefix $exp_prefix-$backbone-$classifier --cfg './config/CIL/generative_backbones/clinc150_task15/SEQ_full.yaml' --backbone $backbone --backbone_revision $backbone_revision --classifier $classifier --training_epochs 5 --evaluate_interval -1 --is_probing True
 
@@ -160,7 +160,7 @@ do
     # ========================================================================================================================
 
     # ---------------------------------------------------------------------------------------------------------------------------
-    wandb_setting='--is_wandb True --wandb_project Class-Incremental-IntentClassification --wandb_entity junhao-zheng'
+    wandb_setting='--is_wandb True --wandb_project Class-Incremental-IntentClassification --wandb_entity your-name'
     # ---------------------------------------------------------------------------------------------------------------------------
     # accelerate launch $config_setting main_CL.py $wandb_setting --exp_prefix $exp_prefix-$backbone-$classifier --cfg './config/CIL/generative_backbones/clinc150_task15/SEQ_full.yaml' --backbone $backbone --backbone_revision $backbone_revision --classifier $classifier --training_epochs 5 --evaluate_interval -1 --is_probing True
 
@@ -174,7 +174,7 @@ do
     # ========================================================================================================================
 
     # ---------------------------------------------------------------------------------------------------------------------------
-    wandb_setting='--is_wandb True --wandb_project Class-Incremental-IntentClassification --wandb_entity junhao-zheng'
+    wandb_setting='--is_wandb True --wandb_project Class-Incremental-IntentClassification --wandb_entity your-name'
     # ---------------------------------------------------------------------------------------------------------------------------
     # accelerate launch $config_setting main_CL.py $wandb_setting --exp_prefix $exp_prefix-$backbone-$classifier --cfg './config/CIL/generative_backbones/clinc150_task15/SEQ_full.yaml' --backbone $backbone --backbone_revision $backbone_revision --classifier $classifier --training_epochs 5 --evaluate_interval -1 --is_probing True
 
@@ -187,7 +187,7 @@ do
     # ========================================================================================================================
 
     # ---------------------------------------------------------------------------------------------------------------------------
-    wandb_setting='--is_wandb True --wandb_project Class-Incremental-IntentClassification --wandb_entity junhao-zheng'
+    wandb_setting='--is_wandb True --wandb_project Class-Incremental-IntentClassification --wandb_entity your-name'
     # ---------------------------------------------------------------------------------------------------------------------------
     # accelerate launch $config_setting main_CL.py $wandb_setting --exp_prefix $exp_prefix-$backbone-$classifier --cfg './config/CIL/generative_backbones/clinc150_task15/SEQ_full.yaml' --backbone $backbone --backbone_revision $backbone_revision --classifier $classifier --training_epochs 5 --evaluate_interval -1 --is_probing True
 
@@ -200,7 +200,7 @@ do
     # ========================================================================================================================
 
     # ---------------------------------------------------------------------------------------------------------------------------
-    wandb_setting='--is_wandb True --wandb_project Class-Incremental-IntentClassification --wandb_entity junhao-zheng'
+    wandb_setting='--is_wandb True --wandb_project Class-Incremental-IntentClassification --wandb_entity your-name'
     # ---------------------------------------------------------------------------------------------------------------------------
     # accelerate launch $config_setting main_CL.py $wandb_setting --exp_prefix $exp_prefix-$backbone-$classifier --cfg './config/CIL/generative_backbones/clinc150_task15/SEQ_full.yaml' --backbone $backbone --backbone_revision $backbone_revision --classifier $classifier --training_epochs 5 --evaluate_interval -1 --is_probing True
 

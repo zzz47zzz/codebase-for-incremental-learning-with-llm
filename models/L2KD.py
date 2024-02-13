@@ -42,7 +42,7 @@ class L2KD(BaseLearner):
         super().__init__(params, CL_dataset, accelerator)
 
         assert params.classifier in ['None'], 'NotImplemented for classifier %s and model %s'%(params.classifier,'L2KD')
-        assert params.il_mode in ['CIL','TIL'], 'NotImplemented for il mode %s and model %s'%(params.il_mode,'L2KD')
+        assert params.il_mode in ['IIL','CIL','TIL'], 'NotImplemented for il mode %s and model %s'%(params.il_mode,'L2KD')
         assert params.classification_type == 'sentence-level', 'NotImplemented for classification type %s'%(params.classification_type)
         assert params.backbone_type == 'generative', 'NotImplemented for backbone type %s'%(params.backbone_type)
         assert not params.is_replay, 'NotImplemented for is_replay = %s'%(params.is_replay)
@@ -50,6 +50,8 @@ class L2KD(BaseLearner):
     # ================================= Initialization =======================================
     def build_metric(self):
         self.result_summary = ResultSummary(num_task=self.CL_dataset.continual_config['NUM_TASK'])
+        if self.params.il_mode == 'IIL':
+            self.result_summary_train = ResultSummary(num_task=self.CL_dataset.continual_config['NUM_TASK'])
         
     def build_backbone(self):
         self.model, self.tokenizer = get_backbone(self.params)
@@ -85,7 +87,7 @@ class L2KD(BaseLearner):
                 del self.teacher_model
             self.teacher_model, _ = get_backbone(self.params)
             teacher_optimizer = get_optimizer(self.params, self.teacher_model, None)
-            self.teacher_model, teacher_optimizer = self.accelerator.prepare(self.teacher_model, teacher_optimizer)
+            self.teacher_model.cuda()
 
             if hasattr(self.teacher_model,'module'):
                 teacher_model = self.teacher_model.module
@@ -112,7 +114,7 @@ class L2KD(BaseLearner):
 
                     teacher_model.train()
                     teacher_optimizer.zero_grad()        
-                    self.accelerator.backward(total_loss)
+                    total_loss.backward()
 
                     scalar_loss = total_loss.item()
                     if not(np.isnan(scalar_loss)) or not(np.isinf(scalar_loss)):
@@ -289,7 +291,10 @@ class L2KD(BaseLearner):
         # For evaluation
         if (self.params.evaluate_interval>0) and epoch_id%self.params.evaluate_interval==0:
             il_mode = self.params.il_mode
-            acc = self.evaluate_current_task(task_id, task_id, 'dev', il_mode)
+            if il_mode == 'IIL':
+                acc, save_dict = self.evaluate_current_task(task_id, task_id, 'dev', il_mode)
+            else:
+                acc = self.evaluate_current_task(task_id, task_id, 'dev', il_mode)
             if self.accelerator.is_main_process:
                 logger.info("Mode %s, Current Task %d, Epoch %d, Step %d: Dev_acc=%.3f" % (
                     il_mode, task_id, epoch_id+1, self.step, acc
@@ -371,6 +376,13 @@ class L2KD(BaseLearner):
             Return:
                 pseudo_dataset_list
         '''
+
+        # For Distributed Data Parallel
+        if hasattr(self.model,'module'):
+            model = self.model.module
+        else:
+            model = self.model
+
         input_column = 'input'
         target_column = 'target'
         ans_token = '__ans__'
@@ -379,15 +391,21 @@ class L2KD(BaseLearner):
 
         pseudo_dataset_list = []
         
-        generate_batch_size = 8
+        generate_batch_size = 4
         
         with torch.no_grad():
 
             for t_id in range(task_id):
-
-                pesudo_samples_dict = {
-                    'input': [], 'target': [], 'label_idx_cil': [], 'label_idx_til': []
-                }
+                
+                if self.params.il_mode == 'IIL':
+                    pesudo_samples_dict = {
+                        'input': [], 'target': [], 'label_idx_cil': [], 'label_idx_til': [],
+                        'instance_id': [], 'concept_id': [], 'relation_id': [], 
+                    }
+                else:
+                        pesudo_samples_dict = {
+                        'input': [], 'target': [], 'label_idx_cil': [], 'label_idx_til': []
+                    }
 
                 cnt_num_samples = num_samples//task_id
 
@@ -400,11 +418,11 @@ class L2KD(BaseLearner):
                     lm_input = self.tokenizer([gen_token for _ in range(generate_num)],
                                                 padding='longest',
                                                 return_tensors='pt')
-                    lm_input = {k:v.to(self.model.device) for k,v in lm_input.items()}
+                    lm_input = {k:v.to(model.device) for k,v in lm_input.items()}
                     
                     max_input_len = np.max([len(lm_input['input_ids'][i]) for i in range(generate_num)])
 
-                    generate_ids_all = self.model.generate(**lm_input, 
+                    generate_ids_all = model.generate(**lm_input, 
                                             max_new_tokens=self.params.max_seq_length-max_input_len, 
                                             pad_token_id=self.tokenizer.eos_token_id,
                                             do_sample=True,
@@ -421,6 +439,10 @@ class L2KD(BaseLearner):
                         pesudo_samples_dict['target'].append(_answer)
                         pesudo_samples_dict['label_idx_cil'].append(-1)
                         pesudo_samples_dict['label_idx_til'].append(-1)
+                        if self.params.il_mode == 'IIL':
+                            pesudo_samples_dict['instance_id'].append(-1)
+                            pesudo_samples_dict['concept_id'].append(-1)
+                            pesudo_samples_dict['relation_id'].append(-1)
 
                     cnt_num_samples -= generate_num
             
@@ -443,9 +465,15 @@ class L2KD(BaseLearner):
                                                         'eos_token':eos_token,
                                                         'gen_token':gen_token,
                                                     })
-                pseudo_dataset.set_format(type='torch', columns=['input_ids','attention_mask','label_idx_cil','label_idx_til',
-                                                                 'input_ids_with_ans', 'attention_mask_with_ans', 'labels_with_ans', 
-                                                                 'input_ids_with_gen_ans', 'attention_mask_with_gen_ans', 'labels_with_gen_ans'])
+                if self.params.il_mode == 'IIL':
+                    pseudo_dataset.set_format(type='torch', columns=['input_ids','attention_mask','label_idx_cil','label_idx_til',
+                                                                    'input_ids_with_ans', 'attention_mask_with_ans', 'labels_with_ans', 
+                                                                    'input_ids_with_gen_ans', 'attention_mask_with_gen_ans', 'labels_with_gen_ans',
+                                                                    'target', 'instance_id', 'concept_id', 'relation_id'])
+                else:
+                    pseudo_dataset.set_format(type='torch', columns=['input_ids','attention_mask','label_idx_cil','label_idx_til',
+                                                                    'input_ids_with_ans', 'attention_mask_with_ans', 'labels_with_ans', 
+                                                                    'input_ids_with_gen_ans', 'attention_mask_with_gen_ans', 'labels_with_gen_ans'])
 
                 pseudo_dataset_list.append(pseudo_dataset)
 

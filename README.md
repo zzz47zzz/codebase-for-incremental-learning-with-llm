@@ -16,7 +16,7 @@ This is a repository for Incremental Learning with Pretrained Language Models.
 ## Supported List
 
 ### Scenario
-- [x] Instance-Incremental Learning
+- [x] [Instance-Incremental Learning](https://arxiv.org/abs/2402.08526)
 - [x] Class-Incremental Learning
 - [x] Task-Incremental Learning
 
@@ -218,6 +218,14 @@ If you have questions about this repository, please feel free to contact me at j
 
 If you find this repository useful, please consider citing our paper.
 ```
+@misc{zheng2024concept1k,
+      title={Concept-1K: A Novel Benchmark for Instance Incremental Learning}, 
+      author={Junhao Zheng and Shengjie Qiu and Qianli Ma},
+      year={2024},
+      eprint={2402.08526},
+      archivePrefix={arXiv},
+      primaryClass={cs.LG}
+}
 @misc{zheng2023learn,
       title={Learn or Recall? Revisiting Incremental Learning with Pre-trained Language Models}, 
       author={Junhao Zheng and Shengjie Qiu and Qianli Ma},

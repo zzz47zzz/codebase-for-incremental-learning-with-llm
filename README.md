@@ -90,7 +90,7 @@ More baselines will be released in the future!
 - [x] Topic3datasets (agnews, dbpedia, yahoo)
 
 #### Intent Classification
-- [x] Clinc150
+- [x] CLINC150
 - [x] Banking77
 
 

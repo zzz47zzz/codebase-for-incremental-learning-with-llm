@@ -1,4 +1,4 @@
-# A Codebase for Incremental Learning with Large Language Models
+# [ACL 2024] A Codebase for Incremental Learning with Large Language Models
 
 [![ACL 2024](https://img.shields.io/badge/ACL-2402.08526-b31b1b.svg)](https://arxiv.org/abs/2402.08526)
 [![ACL 2024 (Findings)](https://img.shields.io/badge/ACL-2402.10447-b31b1b.svg)](https://arxiv.org/abs/2402.10447v1)

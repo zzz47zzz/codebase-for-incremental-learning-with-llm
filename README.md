@@ -35,7 +35,7 @@ More baselines will be released in the future!
 
 #### General (Text/Intent) Classification
 - [x] SEQ
-- [x] [SEQ* (arXiv)](https://arxiv.org/abs/2312.07887)
+- [x] [SEQ* (ACL 2024)](https://arxiv.org/abs/2312.07887)
 - [x] [ExperienceReplay](https://arxiv.org/abs/1902.10486)
 - [x] [PEFT (including, LoRA, PromptTuning)](https://huggingface.co/docs/peft/index)
 - [x] [LAMOL (ICLR 2020)](https://openreview.net/forum?id=Skgxcn4YDS)
@@ -66,19 +66,20 @@ More baselines will be released in the future!
 #### Named Entity Recognition
 - [x] [ExtendNER (AAAI 2021)](https://ojs.aaai.org/index.php/AAAI/article/view/17600)
 - [x] [SelfTrain (EMNLP 2022)](https://aclanthology.org/2022.emnlp-main.236/)
-<!-- - [x] [SpanKL (AAAI 2023)](https://arxiv.org/pdf/2302.12200.pdf)
+- [x] [CFNER (EMNLP 2022)](https://aclanthology.org/2022.emnlp-main.236/)
+- [x] [SpanKL (AAAI 2023)](https://arxiv.org/pdf/2302.12200.pdf)
 - [x] [DLD (SIGIR 2023)](https://dl.acm.org/doi/abs/10.1145/3539618.3591970)
 - [x] [RDP (CIKM 2023)](https://arxiv.org/pdf/2308.08793.pdf)
 - [x] [CPFD (EMNLP 2023)](https://openreview.net/attachment?id=VLrtaSXOWP&name=pdf)
 - [x] [OCILNER (ACL 2023)](https://aclanthology.org/2023.acl-long.328/)
 - [x] [ICE (ACL 2023 findings)](https://aclanthology.org/2023.findings-acl.141.pdf)
-- [x] [CFNER (EMNLP 2022)](https://aclanthology.org/2022.emnlp-main.236/) -->
+- [x] [IS3 (ACL 2024 findings)](https://arxiv.org/abs/2402.10447v1)
 
 #### Original for Image Classification
 - [x] [DER++ (NIPS2020)](https://proceedings.neurips.cc/paper/2020/hash/b704ea2c39778f07c617f6b7ce480e9e-Abstract.html)
 - [x] [CLSER (ICLR2022)](https://openreview.net/forum?id=uxxFrDwrE7Y)
-<!-- - [ ] [A-GEM (ICLR 2019)](https://arxiv.org/abs/1812.00420)
 - [ ] [EWC (PNAS 2017)](https://www.pnas.org/doi/abs/10.1073/pnas.1611835114)
+<!-- - [ ] [A-GEM (ICLR 2019)](https://arxiv.org/abs/1812.00420)
 - [ ] [GEM (NIPS 2017)](https://proceedings.neurips.cc/paper/2017/hash/f87522788a2be2d171666752f97ddebb-Abstract.html) -->
 
 ### Datasets

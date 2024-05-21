@@ -79,7 +79,7 @@ More baselines will be released in the future!
 #### Original for Image Classification
 - [x] [DER++ (NIPS2020)](https://proceedings.neurips.cc/paper/2020/hash/b704ea2c39778f07c617f6b7ce480e9e-Abstract.html)
 - [x] [CLSER (ICLR2022)](https://openreview.net/forum?id=uxxFrDwrE7Y)
-- [ ] [EWC (PNAS 2017)](https://www.pnas.org/doi/abs/10.1073/pnas.1611835114)
+- [x] [EWC (PNAS 2017)](https://www.pnas.org/doi/abs/10.1073/pnas.1611835114)
 <!-- - [ ] [A-GEM (ICLR 2019)](https://arxiv.org/abs/1812.00420)
 - [ ] [GEM (NIPS 2017)](https://proceedings.neurips.cc/paper/2017/hash/f87522788a2be2d171666752f97ddebb-Abstract.html) -->
 
@@ -223,14 +223,6 @@ If you have questions about this repository, please feel free to contact me at j
 
 If you find this repository useful, please consider citing our paper.
 ```
-@misc{zheng2024concept1k,
-      title={Concept-1K: A Novel Benchmark for Instance Incremental Learning}, 
-      author={Junhao Zheng and Shengjie Qiu and Qianli Ma},
-      year={2024},
-      eprint={2402.08526},
-      archivePrefix={arXiv},
-      primaryClass={cs.LG}
-}
 @misc{zheng2023learn,
       title={Learn or Recall? Revisiting Incremental Learning with Pre-trained Language Models}, 
       author={Junhao Zheng and Shengjie Qiu and Qianli Ma},
@@ -238,6 +230,24 @@ If you find this repository useful, please consider citing our paper.
       eprint={2312.07887},
       archivePrefix={arXiv},
       primaryClass={cs.CL}
+}
+```
+```
+@article{qiu2024incremental,
+  title={Incremental Sequence Labeling: A Tale of Two Shifts},
+  author={Qiu, Shengjie and Zheng, Junhao and Liu, Zhen and Luo, Yicheng and Ma, Qianli},
+  journal={arXiv preprint arXiv:2402.10447},
+  year={2024}
+}
+```
+```
+@misc{zheng2024concept1k,
+      title={Concept-1K: A Novel Benchmark for Instance Incremental Learning}, 
+      author={Junhao Zheng and Shengjie Qiu and Qianli Ma},
+      year={2024},
+      eprint={2402.08526},
+      archivePrefix={arXiv},
+      primaryClass={cs.LG}
 }
 ```
 

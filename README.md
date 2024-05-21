@@ -1,6 +1,7 @@
-# An Extendible Incremental Learning Codebase for Large Language Models
+# A Codebase for Incremental Learning with Large Language Models
 
-[![arXiv](https://img.shields.io/badge/arXiv-2402.08526-b31b1b.svg)](https://arxiv.org/abs/2402.08526)
+[![ACL 2024](https://img.shields.io/badge/ACL-2402.08526-b31b1b.svg)](https://arxiv.org/abs/2402.08526)
+[![ACL 2024 (Findings)](https://img.shields.io/badge/ACL-2402.10447-b31b1b.svg)](https://arxiv.org/abs/2402.10447v1)
 [![arXiv](https://img.shields.io/badge/arXiv-2312.07887-b31b1b.svg)](https://arxiv.org/abs/2312.07887)
 
 ## Contents
@@ -9,7 +10,7 @@
 - [Usage](#Usage)
 
 ## Introduction
-This is a repository for Incremental Learning with Pretrained Language Models. 
+This is a repository for Incremental Learning with Large Language Models. 
 - It supports both generative and discriminative models in [transformers](https://huggingface.co/docs/transformers/index).
 - It supports using [accelerate](https://huggingface.co/docs/accelerate/index) for distributed data parrallel and model parallel.
 - It supports using [wandb](https://wandb.ai/site) for logging.
@@ -35,7 +36,6 @@ More baselines will be released in the future!
 
 #### General (Text/Intent) Classification
 - [x] SEQ
-- [x] [SEQ* (ACL 2024)](https://arxiv.org/abs/2312.07887)
 - [x] [ExperienceReplay](https://arxiv.org/abs/1902.10486)
 - [x] [PEFT (including, LoRA, PromptTuning)](https://huggingface.co/docs/peft/index)
 - [x] [LAMOL (ICLR 2020)](https://openreview.net/forum?id=Skgxcn4YDS)
@@ -45,6 +45,7 @@ More baselines will be released in the future!
 - [x] [PCLL (EMNLP 2022)](https://aclanthology.org/2022.emnlp-main.766/)
 - [x] [LFPT5 (ICLR 2022)](https://openreview.net/forum?id=7mozamSFNt4)
 - [x] [ProgPrompt (ICLR 2023)](https://openreview.net/forum?id=UJTgQBc91_)
+- [x] [SEQ* (ACL 2024)](https://arxiv.org/abs/2312.07887)
 <!-- - [ ] [ConTinTin (ACL 2022)](https://aclanthology.org/2022.acl-long.218/) -->
 <!-- - [ ] [AdapComModules (ACL 2022, code is available but hard to implement)](https://aclanthology.org/2022.acl-long.255/) -->
 <!-- - [ ] [LotteryPrompt (ACL 2023, code not available for now)](https://aclanthology.org/2023.acl-long.16/) -->

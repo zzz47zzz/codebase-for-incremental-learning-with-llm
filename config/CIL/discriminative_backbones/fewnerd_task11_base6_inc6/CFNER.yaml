@@ -1,0 +1,12 @@
+il_mode: CIL
+
+dataset: fewnerd_task11_base6_inc6
+classification_type: word-level
+
+backbone_type: discriminative
+
+method: CFNER
+is_DCE: False
+is_ODCE: False
+
+prompt_type: none

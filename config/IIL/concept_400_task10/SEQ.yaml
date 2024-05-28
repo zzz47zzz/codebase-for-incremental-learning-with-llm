@@ -1,6 +1,6 @@
 il_mode: IIL
 
-dataset: concept_1k_task10
+dataset: concept_400_task10
 
 classification_type: auto
 
@@ -10,7 +10,7 @@ classifier: None
 
 Replay_batch_level: False
 
-method: EWC
+method: SEQ
 
 lr: 1e-5
 info_per_steps: 25

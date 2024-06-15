@@ -12,4 +12,7 @@ default*.yaml
 *.swp
 /*.sh
 *.npy
+*.err
+*.script
+*.deepspeed_env
 !preprocess_dataset.sh

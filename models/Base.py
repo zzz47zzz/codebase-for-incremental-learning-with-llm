@@ -4,6 +4,7 @@ import logging
 import torch
 from abc import abstractmethod
 from copy import deepcopy
+from accelerate.utils import gather_object
 
 
 from utils.evaluation import compute_backward_transfer, compute_average_acc, compute_average_inc_acc, compute_forgetting
@@ -309,10 +310,15 @@ class BaseLearner(object):
 
                 acc_list.append(acc)
 
-            if save_dict_all is not None:
-                with open(os.path.join(self.params.dump_path,
-                                       '%s_cur_task_%d_save_result.npy'%(phase,cur_task_id)),'wb') as f:
-                    np.save(f,save_dict_all)
+            save_dict_all = [save_dict_all] # transform to list, otherwise gather_object() will not collect correctly
+
+            gathered_save_dict_all = gather_object(save_dict_all)
+
+            if self.accelerator.is_main_process:
+                if gathered_save_dict_all is not None:
+                    with open(os.path.join(self.params.dump_path,
+                                        '%s_cur_task_%d_save_result.npy'%(phase,cur_task_id)),'wb') as f:
+                        np.save(f,gathered_save_dict_all)
 
         # Evaluate on all seen tasks
         # NOTE: We only test once because the test set of task task_id contains all seen labels from task 0 - task task_id)

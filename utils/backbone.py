@@ -39,8 +39,13 @@ def get_backbone(params, num_task: int=1):
     else:
         assert params.backbone_type in ['generative','discriminative'], 'Invalid backbone type %s'%(params.backbone_type)
     
-    if params.backbone not in ['llama2-13b-orca-8k-3319']:
+    # if params.backbone not in ['llama2-13b-orca-8k-3319']:
+    try:
         config = AutoConfig.from_pretrained(params.backbone)
+        config.return_dict = True
+    except:
+        config = AutoConfig.from_pretrained(os.path.join(params.backbone_cache_path,
+                                                                params.backbone))
         config.return_dict = True
 
     if params.method == 'AdapterCL':
@@ -49,10 +54,16 @@ def get_backbone(params, num_task: int=1):
     if params.method == 'CPFD':
         config.output_attentions = True
 
-    if params.backbone == 'llama2-13b-orca-8k-3319':
-        model = AutoModelForCausalLM.from_pretrained("../llama2-13b-orca-8k-3319", torch_dtype=torch.float16, low_cpu_mem_usage=True, device_map="auto")
-    elif params.backbone_revision is None or params.backbone_revision=='':
-        model = AutoModelForCausalLM.from_pretrained(params.backbone, config=config)
+    # if params.backbone == 'llama2-13b-orca-8k-3319':
+    #     model = AutoModelForCausalLM.from_pretrained("../llama2-13b-orca-8k-3319", torch_dtype=torch.float16, low_cpu_mem_usage=True, device_map="auto")
+    if params.backbone_revision is None or params.backbone_revision=='':
+        try:
+            model = AutoModelForCausalLM.from_pretrained(params.backbone, config=config)
+        except:
+            model = AutoModelForCausalLM.from_pretrained(os.path.join(params.backbone_cache_path,
+                                                                    params.backbone),
+                                                        config=config)
+            
     else:
         try:
             model = AutoModelForCausalLM.from_pretrained(params.backbone, 
@@ -115,10 +126,16 @@ def get_backbone(params, num_task: int=1):
         tokenizer = LlamaTokenizer.from_pretrained(params.backbone, padding_side='left' if params.backbone_type == 'generative' else 'right')
         tokenizer.pad_token = '[PAD]'
         tokenizer.eos_token = '[PAD]'
-    elif params.backbone == 'llama2-13b-orca-8k-3319':
-        tokenizer = AutoTokenizer.from_pretrained("../llama2-13b-orca-8k-3319", use_fast=False, padding_side='left' if params.backbone_type == 'generative' else 'right')
+    # elif params.backbone == 'llama2-13b-orca-8k-3319':
+    #     tokenizer = AutoTokenizer.from_pretrained("../llama2-13b-orca-8k-3319", use_fast=False, padding_side='left' if params.backbone_type == 'generative' else 'right')
     elif params.backbone_revision is None or params.backbone_revision=='':
-        tokenizer = AutoTokenizer.from_pretrained(params.backbone, padding_side='left' if params.backbone_type == 'generative' else 'right')
+        try:
+            tokenizer = AutoTokenizer.from_pretrained(params.backbone, 
+                                                padding_side='left' if params.backbone_type == 'generative' else 'right')
+        except:
+            tokenizer = AutoTokenizer.from_pretrained(os.path.join(params.backbone_cache_path,
+                                                                    params.backbone), 
+                                                padding_side='left' if params.backbone_type == 'generative' else 'right')
     else:
         try:
             tokenizer = AutoTokenizer.from_pretrained(params.backbone, padding_side='left' if params.backbone_type == 'generative' else 'right',

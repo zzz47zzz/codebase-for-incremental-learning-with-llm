@@ -154,7 +154,7 @@ def probing_on_all_task(params, task_id, CL_dataset, train_loader_list, test_loa
                             if class_idx not in _label_idx:
                                 continue
                             class_mask = (_label_idx==class_idx)
-                            cnt_class_samples[class_idx] += 1
+                            cnt_class_samples[class_idx] += class_mask.sum().item()
                             cur_class_prototypes[class_idx] += _feature[class_mask].detach().sum(dim=0)
 
                 loss_list_epochs_linear.append(np.mean(loss_list_linear))
@@ -255,7 +255,7 @@ def probing_on_all_task(params, task_id, CL_dataset, train_loader_list, test_loa
                                 if class_idx not in _label_idx:
                                     continue
                                 class_mask = (_label_idx==class_idx)
-                                cnt_class_samples[t_id][class_idx] += 1
+                                cnt_class_samples[t_id][class_idx] += class_mask.sum().item()
                                 cur_class_prototypes[t_id][class_idx] += _feature[class_mask].detach().sum(dim=0)
 
                     loss_list_epochs_linear.append(np.mean(loss_list_linear))

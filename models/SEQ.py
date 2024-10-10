@@ -468,7 +468,7 @@ class SEQ(BaseLearner):
                     if class_idx not in label_idx:
                         continue
                     class_mask = (label_idx==class_idx)
-                    cnt_class_samples[class_idx] += 1
+                    cnt_class_samples[class_idx] += class_mask.sum().item()
                     cur_class_prototypes[class_idx-cur_class_idx[0]] += extracted_feature[class_mask].sum(dim=0)
 
         # Set the weight of the current classifier

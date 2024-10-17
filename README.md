@@ -23,6 +23,8 @@ This is a repository for Incremental Learning with Large Language Models.
 - [x] [Instance-Incremental Learning](https://arxiv.org/abs/2402.08526)
 - [x] Class-Incremental Learning
 - [x] Task-Incremental Learning
+- [ ] Continual Instruction Tuning (Coming soon!)
+- [ ] Continual Knowledge Editing (Coming soon!)
 
 ### Tasks
 - [x] Text Classification
@@ -35,7 +37,7 @@ This is a repository for Incremental Learning with Large Language Models.
 More baselines will be released in the future!
 
 #### General (Text/Intent) Classification
-- [x] SEQ
+- [x] SEQ (Sequential Finetuning)
 - [x] [ExperienceReplay](https://arxiv.org/abs/1902.10486)
 - [x] [PEFT (including, LoRA, PromptTuning)](https://huggingface.co/docs/peft/index)
 - [x] [LAMOL (ICLR 2020)](https://openreview.net/forum?id=Skgxcn4YDS)
@@ -105,6 +107,12 @@ More baselines will be released in the future!
 - [x] Ontonotes5
 - [x] I2B2
 
+## Best Practice to Use this Codebase
+
+### How to reproduce the performance of SEQ and SEQ*?
+The config file of SEQ (just sequential fine-tuning) can be found in the `SEQ_full.yaml` (in the config directory). 
+The config file of SEQ* can be found in the `SEQ_pre_warm_fix.yaml`. 
+Note that the classifier type (linear or cosine linear) is not specified in all config files because we set it the script. An example can be found in `https://github.com/zzz47zzz/codebase-for-incremental-learning-with-llm/blob/main/reproduce_shell/exp-CIL-sota/SOTA-CIL-Intent-discriminative-banking77_task7.sh`.
 
 ## Usage
 

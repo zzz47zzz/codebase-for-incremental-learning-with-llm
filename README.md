@@ -5,7 +5,7 @@
 [![arXiv](https://img.shields.io/badge/arXiv-Concept_1K-b31b1b.svg)](https://arxiv.org/abs/2402.08526)
 
 ## News 📢
-- A follow-up research called "Spurious Forgetting in Continual Learning of Language Models" (ICLR 2025) of LLM is available at [OpenReview](https://openreview.net/forum?id=ScI7IlKGdI) and the code is available at [https://github.com/zzz47zzz/spurious-forgetting]! This research extend the idea in "Learn or Recall? Revisiting Incremental Learning with Pre-trained Language Models" to more general continual learning setting such as instruction tuning and alignment of LLMs.
+- A follow-up research called "Spurious Forgetting in Continual Learning of Language Models" (ICLR 2025) of LLM is available at [OpenReview](https://openreview.net/forum?id=ScI7IlKGdI) and the code is available at this [repository](https://github.com/zzz47zzz/spurious-forgetting)! This research extend the idea in "Learn or Recall? Revisiting Incremental Learning with Pre-trained Language Models" to more general continual learning setting such as instruction tuning and alignment of LLMs.
 - The interpretation of the paper "Learn or Recall? Revisiting Incremental Learning with Pre-trained Language Models" is available on [PaperWeekly](https://mp.weixin.qq.com/s/G5oD4UM21PFMNlGz2iwUVw) and [知乎](https://zhuanlan.zhihu.com/p/8972477202)! 
 
 

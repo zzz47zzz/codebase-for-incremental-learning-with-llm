@@ -4,9 +4,11 @@
 [![ACL 2024 (Findings)](https://img.shields.io/badge/ACL_2024-Incremental_Sequence_Labeling-1c8139.svg)](https://arxiv.org/abs/2402.10447v1)
 [![arXiv](https://img.shields.io/badge/arXiv-Concept_1K-b31b1b.svg)](https://arxiv.org/abs/2402.08526)
 
-## News 📢
-- **2025.01**: A follow-up research called **"Spurious Forgetting in Continual Learning of Language Models" (ICLR 2025)** of LLM is available at [OpenReview](https://openreview.net/forum?id=ScI7IlKGdI) and the code is available at this [repository](https://github.com/zzz47zzz/spurious-forgetting)! This research extend the idea in "Learn or Recall? Revisiting Incremental Learning with Pre-trained Language Models" to more general continual learning setting such as *instruction tuning* and *safety alignment* of LLMs.
-- **2024.12**: The interpretation of the paper **"Learn or Recall? Revisiting Incremental Learning with Pre-trained Language Models" (ACL 2024 Oral)** is available on [PaperWeekly](https://mp.weixin.qq.com/s/G5oD4UM21PFMNlGz2iwUVw) and [知乎](https://zhuanlan.zhihu.com/p/8972477202)! 
+## 📢 Latest News  
+
+- **2025.01** – Our follow-up research, **"Spurious Forgetting in Continual Learning of Language Models" (ICLR 2025)**, is now available on [OpenReview](https://openreview.net/forum?id=ScI7IlKGdI)! 🎉 The corresponding code can be accessed in this [repository](https://github.com/zzz47zzz/spurious-forgetting). This work extends the ideas from **"Learn or Recall? Revisiting Incremental Learning with Pre-trained Language Models"** to a more **general continual learning setting**, including *instruction tuning* and *safety alignment* for LLMs.  
+- **2024.12** – The interpretation of our paper **"Learn or Recall? Revisiting Incremental Learning with Pre-trained Language Models" (ACL 2024 Oral)** is now featured on [PaperWeekly](https://mp.weixin.qq.com/s/G5oD4UM21PFMNlGz2iwUVw) and [知乎](https://zhuanlan.zhihu.com/p/8972477202)! 📖 Dive into these platforms for an in-depth analysis and discussion.  
+
 
 
 ## Contents
